@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  background-color: #202020;
+  font-family: sans-serif;
+}
+
+.container {
+  padding: 40px;
+  background-color: #202020;
+  border-radius: 40px 40px 0 0;
+}
+
+.soporte-card {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 40px;
+}
+
+.formulario label {
+  margin: 10px 0 5px;
+}
+
+.formulario input,
+.formulario textarea {
+  background-color: #656565;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  resize: none;
+}
+
+.formulario textarea {
+  height: 60px;
+}
+
+.info-soporte {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info-soporte ul {
+  margin-top: 0;
+  padding-left: 20px;
+}
+
+.info-soporte button {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: bold;
+  align-self: flex-start;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.info-soporte button:hover {
+  background-color: #256326;
+}
+
+::placeholder {
+  color: #CCCCCC;
+  opacity: 1;
+}
+
+.close-button {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  font-size: 18px;
+  color: white;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  line-height: 32px;
+  cursor: pointer;
+  z-index: 1001;
+}

@@ -1,0 +1,345 @@
+<!-- Ubicación: /FrontEnd/Asistentes/Biomo/reporteSuperadmin.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi – Detalle del Biomo (Superadmin)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none;transition:opacity .2s;}
+    .sidebar-label{transition:opacity .2s;}
+    .rotate-180{transform:rotate(180deg);}
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif;}
+    .card{background:#505050;border-radius:1rem;padding:1rem;width:280px;cursor:pointer;transition:background .2s;}
+    .card:hover{background:#585858;}
+    .card img{width:100%;height:180px;object-fit:cover;border-radius:.5rem;}
+    select, input{min-width:190px;}
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  
+  <!-- NAVBAR -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png" 
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"/>
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+          </a>
+                <a href="/Asistentes\Convocatorias\convocatoriasSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Convocatorias</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/anteproyectosSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+
+        <a href="/Asistentes\Convocatorias\chatsuper.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+    <!-- CONTENIDO -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6 text-sm text-gray-400">
+          <a href="/super-Admin.html" class="hover:text-green-400">Dashboard</a>
+          <span class="mx-2">›</span>
+          <a href="biomoSuperadmin.html" class="hover:text-green-400">Biomos</a>
+          <span class="mx-2">›</span>
+          <span class="text-white">Detalle</span>
+        </nav>
+
+        <!-- Card del reporte -->
+        <div id="reporte-card" class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+          <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-white">Detalle del Biomo</h1>
+            <div class="flex gap-2">
+              <button onclick="window.print()" 
+                      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                <i data-feather="printer" class="w-4 h-4"></i>
+                Imprimir
+              </button>
+              <button onclick="location.href='biomoSuperadmin.html'"
+                      class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                <i data-feather="arrow-left" class="w-4 h-4"></i>
+                Volver
+              </button>
+            </div>
+          </div>
+          
+          <!-- Loading state -->
+          <div id="loading" class="text-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto mb-4"></div>
+            <p class="text-gray-400">Cargando información del biomo...</p>
+          </div>
+
+          <!-- Content -->
+          <div id="reporte-detalle" class="hidden space-y-4"></div>
+          
+          <!-- Error state -->
+          <div id="error-state" class="hidden text-center py-8">
+            <div class="text-red-400 text-6xl mb-4">⚠️</div>
+            <h3 class="text-xl font-semibold text-red-400 mb-2">Error al cargar el biomo</h3>
+            <p class="text-gray-400 mb-4">No se pudo obtener la información del biomo solicitado.</p>
+            <button onclick="location.reload()" 
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+              Reintentar
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+feather.replace();
+
+/* Sidebar */
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggleSide');
+toggleBtn.onclick = () => {
+  sidebar.classList.toggle('w-64');
+  sidebar.classList.toggle('w-16');
+  sidebar.classList.toggle('collapsed');
+  toggleBtn.querySelector('svg')?.classList.toggle('rotate-180');
+};
+
+/* Auth check */
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+const token = localStorage.getItem('token');
+
+if (!user.id_usuario || !token) {
+  document.body.innerHTML = `
+    <div class="min-h-screen flex items-center justify-center bg-gray-900">
+      <div class="text-center">
+        <h1 class="text-2xl font-bold text-white mb-4">Acceso Restringido</h1>
+        <p class="text-gray-400 mb-6">Debes iniciar sesión para acceder a esta página</p>
+        <button onclick="location.href='/index.html'" 
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">
+          Ir al Login
+        </button>
+      </div>
+    </div>`;
+  throw new Error('No auth');
+}
+
+/* User info */
+document.getElementById('userName').textContent = user.nombre || 'Usuario';
+const avatarURL = localStorage.getItem('foto_perfil');
+if (avatarURL && avatarURL !== 'null') {
+  const avatar = document.getElementById('avatar');
+  avatar.src = avatarURL.startsWith('/') ? avatarURL : '/' + avatarURL;
+  avatar.onerror = () => avatar.src = '/Assets/avatar-placeholder.png';
+}
+
+/* Navigation */
+document.getElementById('logoutBtn').onclick = () => {
+  sessionStorage.clear();
+  localStorage.clear();
+  location.href = '/index.html';
+};
+document.getElementById('profileBtn').onclick = () => location.href = '/Perfil/perfilSuper.html';
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };
+/* Load report */
+const reporteId = new URLSearchParams(window.location.search).get('id');
+
+if (!reporteId) {
+  showError('ID de biomo no proporcionado');
+} else {
+  loadReporte(reporteId);
+}
+
+async function loadReporte(id) {
+  const loading = document.getElementById('loading');
+  const content = document.getElementById('reporte-detalle');
+  const errorState = document.getElementById('error-state');
+
+  try {
+    loading.classList.remove('hidden');
+    content.classList.add('hidden');
+    errorState.classList.add('hidden');
+
+    // ✅ CORREGIR TEMPLATE LITERAL
+    const response = await fetch(`/api/reportes/${id}`, {
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    
+    // Parse images
+    let imagenes = [];
+    try {
+      const parsed = JSON.parse(data.imagenes || '[]');
+      imagenes = Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      if (data.imagenes) imagenes = [data.imagenes];
+    }
+
+    // ✅ CORREGIR TEMPLATE LITERALS EN MAP
+    const imagenesHtml = imagenes.length > 0 ? 
+      imagenes.map(img => 
+        `<img src="/imagesBiomos/${img}" 
+              class="rounded-lg shadow-md w-full max-w-sm hover:scale-105 transition-transform cursor-pointer" 
+              onerror="this.src='/Assets/avatar-placeholder.png'"
+              onclick="openImageModal('${img}')">`
+      ).join('') : 
+      '<p class="text-gray-400 italic">No hay imágenes disponibles</p>';
+
+    // ✅ CORREGIR TEMPLATE LITERAL PRINCIPAL
+    content.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <h3 class="font-semibold text-green-400 mb-3">Información General</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>ID Biomo:</strong> <span class="text-green-400">#${data.id_biomo || data.id_reporte || id}</span></p>
+              <p><strong>Tipo de Registro:</strong> ${(data.record_type || data.estado || '').replace(/_/g, ' ')}</p>
+              <p><strong>Usuario:</strong> ${data.nombre_usuario || '—'}</p>
+              <p><strong>Fecha de Creación:</strong> ${data.fecha_creacion ? new Date(data.fecha_creacion).toLocaleString() : '—'}</p>
+            </div>
+          </div>
+
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <h3 class="font-semibold text-green-400 mb-3">Condiciones Ambientales</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>Clima:</strong> ${data.weather_condition || '—'}</p>
+              <p><strong>Estación:</strong> ${data.season || '—'}</p>
+              <p><strong>Ecosistema:</strong> ${data.tipo_ecosistema || '—'}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <h3 class="font-semibold text-green-400 mb-3">Ubicación</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>Ubicación:</strong> ${data.ubicacion || '—'}</p>
+              <p><strong>Coordenadas:</strong> ${data.coordenadas || '—'}</p>
+            </div>
+          </div>
+
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <h3 class="font-semibold text-green-400 mb-3">Observaciones</h3>
+            <div class="text-sm">
+              <p class="bg-gray-800 p-3 rounded border-l-4 border-green-400">
+                ${data.observaciones || 'Sin observaciones registradas'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="font-semibold text-green-400 mb-4">Imágenes del Biomo</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${imagenesHtml}
+        </div>
+      </div>`;
+
+    loading.classList.add('hidden');
+    content.classList.remove('hidden');
+
+  } catch (error) {
+    console.error('Error loading reporte:', error);
+    showError(error.message);
+  }
+}
+
+function showError(message) {
+  const loading = document.getElementById('loading');
+  const content = document.getElementById('reporte-detalle');
+  const errorState = document.getElementById('error-state');
+  
+  loading.classList.add('hidden');
+  content.classList.add('hidden');
+  errorState.classList.remove('hidden');
+  
+  const errorMsg = errorState.querySelector('p');
+  if (errorMsg) errorMsg.textContent = message;
+}
+
+// Modal para imágenes
+function openImageModal(imageName) {
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+  modal.onclick = () => modal.remove();
+  
+  modal.innerHTML = `
+    <div class="max-w-4xl max-h-full p-4">
+      <img src="/imagesBiomos/${imageName}" 
+           class="max-w-full max-h-full rounded-lg shadow-2xl"
+           onerror="this.src='/Assets/avatar-placeholder.png'">
+      <button onclick="this.parentElement.parentElement.remove()" 
+              class="absolute top-4 right-4 text-white bg-red-600 hover:bg-red-700 rounded-full w-10 h-10 flex items-center justify-center">
+        ✕
+      </button>
+    </div>`;
+  
+  document.body.appendChild(modal);
+}
+</script>
+</body>
+</html>

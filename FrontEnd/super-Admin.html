@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mawi – Super-Admin</title>
+
+  <!-- Tailwind + Feather -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    .collapsed .sidebar-label {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .metric-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+  <!-- NAVBAR -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"/>
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/convocatoriasSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Convocatorias</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/anteproyectosSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/chatsuper.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+    
+    <iframe id="supportIframe" src="/Soporte/soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0; z-index: 1000;"></iframe>
+
+    <!-- CONTENIDO -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold mb-2">Panel de Administración</h1>
+        <p class="text-gray-400">Informes, métricas y análisis del sistema</p>
+      </div>
+
+      <!-- ✅ Grid de 4 tarjetas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        
+        <!-- 🟢 Tarjeta Total EcoRangers -->
+        <div class="metric-card bg-gradient-to-br from-green-600 to-green-700 p-6 rounded-xl shadow-lg">
+          <div class="flex items-center justify-between mb-4">
+            <div class="bg-white/20 p-3 rounded-lg">
+              <i data-feather="users" class="w-6 h-6 text-white"></i>
+            </div>
+      
+          </div>
+          <h3 class="text-white font-semibold text-lg mb-2">EcoRangers</h3>
+          <p class="text-green-100 text-sm mb-4">Usuarios registrados en la plataforma</p>
+          <button id="btnEcoRangerReporte"
+                  class="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            Ver Reporte
+          </button>
+        </div>
+
+        <!-- 🔵 Tarjeta Total Biomos -->
+        <div class="metric-card bg-gradient-to-br from-blue-600 to-blue-700 p-6 rounded-xl shadow-lg">
+          <div class="flex items-center justify-between mb-4">
+            <div class="bg-white/20 p-3 rounded-lg">
+              <i data-feather="globe" class="w-6 h-6 text-white"></i>
+            </div>
+           
+          </div>
+          <h3 class="text-white font-semibold text-lg mb-2">Biomos</h3>
+          <p class="text-blue-100 text-sm mb-4">Ecosistemas creados y monitoreados</p>
+          <button id="btnBiomoReporte"
+                  class="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            Ver Reporte
+          </button>
+        </div>
+
+        <!-- 🟡 Tarjeta Total Anteproyectos -->
+        <div class="metric-card bg-gradient-to-br from-yellow-600 to-orange-600 p-6 rounded-xl shadow-lg">
+          <div class="flex items-center justify-between mb-4">
+            <div class="bg-white/20 p-3 rounded-lg">
+              <i data-feather="file-text" class="w-6 h-6 text-white"></i>
+            </div>
+            
+          </div>
+          <h3 class="text-white font-semibold text-lg mb-2">Anteproyectos</h3>
+          <p class="text-yellow-100 text-sm mb-4">Proyectos en desarrollo y finalizados</p>
+          <button id="btnAnteproyectoReporte"
+                  class="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            Ver Reporte
+          </button>
+        </div>
+
+        <!-- 🟣 Tarjeta Total Convocatorias -->
+        <div class="metric-card bg-gradient-to-br from-purple-600 to-indigo-600 p-6 rounded-xl shadow-lg">
+          <div class="flex items-center justify-between mb-4">
+            <div class="bg-white/20 p-3 rounded-lg">
+              <i data-feather="layers" class="w-6 h-6 text-white"></i>
+            </div>
+        
+          </div>
+          <h3 class="text-white font-semibold text-lg mb-2">Convocatorias</h3>
+          <p class="text-purple-100 text-sm mb-4">Convocatorias activas y finalizadas</p>
+          <button id="btnConvocatoriaReporte"
+                  class="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            Ver Reporte
+          </button>
+        </div>
+
+      </div>
+
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    feather.replace();
+
+    /* 1. Sidebar */
+    const sidebar = document.getElementById('sidebar');
+    const toggleSide = document.getElementById('toggleSide');
+    toggleSide.onclick = function () {
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-16');
+      sidebar.classList.toggle('collapsed');
+      const icon = this.querySelector('svg');
+      icon.setAttribute('data-feather', sidebar.classList.contains('collapsed') ? 'chevron-right' : 'chevron-left');
+      feather.replace();
+    };
+
+    /* 2. Perfil y soporte */
+    const profileBtn = document.getElementById('profileBtn');
+    profileBtn.addEventListener('click', () =>
+      location.href = '../Perfil/perfilSuper.html'
+    );
+    
+    // Mostrar el iframe de soporte
+    document.getElementById('supportBtn').onclick = function() {
+      const iframe = document.getElementById('supportIframe');
+      iframe.style.display = iframe.style.display === 'none' ? 'block' : 'none';
+    };
+
+    /* 3. Logout */
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      sessionStorage.clear();
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('foto_perfil');
+      location.href = 'index.html';
+    });
+
+    /* 4. Nombre y avatar */
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    if (userData?.nombre) document.getElementById('userName').textContent = userData.nombre;
+    const avatarUrl = localStorage.getItem('foto_perfil');
+    if (avatarUrl) document.getElementById('avatar').src = avatarUrl;
+
+    
+
+    /* 6. Botones "Ver Reporte" */
+    document.getElementById('btnBiomoReporte')
+            .addEventListener('click', () =>
+              location.href = 'Asistentes/Biomo/biomoSuperadmin.html'
+            );
+    
+    document.getElementById('btnEcoRangerReporte')
+            .addEventListener('click', () =>
+              location.href = '/Views/super/users.html'
+            );
+    
+    document.getElementById('btnAnteproyectoReporte')
+            .addEventListener('click', () =>
+              location.href = '/Asistentes/Convocatorias/anteproyectosSuperadmin.html'
+            );
+    
+    document.getElementById('btnConvocatoriaReporte')
+            .addEventListener('click', () =>
+              location.href = '/Asistentes/Convocatorias/convocatoriasSuperadmin.html'
+            );
+  </script>
+</body>
+</html>

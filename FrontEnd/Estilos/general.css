@@ -1,0 +1,144 @@
+/* Login */
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #353535;
+    font-family: arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 100vh;
+}
+
+.card-container {
+    background-color: #505050;
+    padding: 25px 24px;
+    width: 320px;
+    text-align: center;
+    border-radius: 16px;
+}
+
+.tittle {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.register-link {
+    font-size: 13px;
+    color: #F0F0F0;
+    margin-top: -12px;
+}
+
+.register-link a {
+    text-decoration: none;
+    color: #F0F0F0;
+}
+
+.login-form {
+    display: flex;
+    margin-left: 10px;
+    margin-right: 10px;
+    flex-direction: column;
+}
+
+.login-form label {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.login-form input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #656565;
+    color: white;
+    font-size: 10px;
+}
+
+.login-form input::placeholder {
+    color: #CCCCCC;
+}
+
+.forgot-password {
+    font-size: 9px;
+    color: #88CD84;
+    text-decoration: underline;
+    text-align: left;
+    margin-top: -3px;
+    margin-bottom: 20px;
+}
+
+
+.btn-green {
+    display: block;
+    margin: 0 auto;
+    background-color: #22782C;
+    color: #F0F0F0;
+    padding: 14px;
+    width: 50%;
+    text-align: center;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-green:hover {
+  background-color: #153D1B;
+}
+
+.support-link {
+    font-size: 10px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.support-link a {
+    color: #F0F0F0;
+}
+
+/* Recuperar */
+
+.recuperar .tittle {
+    font-size: 20px;
+    margin-top: 22px;
+    margin-bottom: 22px;
+}
+
+.recuperar .login-form {
+    margin-bottom: 20px;
+}
+
+.recuperar .btn-green {
+    margin-top: 14px;
+}
+
+.recuperar .support-link {
+    margin-bottom: 22px;
+}
+
+/* mensajes */
+
+.mensaje {
+    font-family: sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* textos guía */
+
+.subtitle {
+    font-size: 12px;
+    margin-top: -12px;
+    margin-bottom: 15px;
+    color: #CCCCCC;
+}

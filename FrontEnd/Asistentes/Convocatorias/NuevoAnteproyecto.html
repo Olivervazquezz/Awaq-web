@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi – Explorador de Anteproyectos</title>
+  <!-- Tailwind & Feather Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif}
+    .sidebar-label{transition:opacity .2s}
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none}
+    .tab-active{border-bottom:3px solid #34d399;color:#34d399}
+    .form-slide {
+      transition: all 0.3s ease-in-out;
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    .form-slide.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ▸ NAVBAR ------------------------------------------------------ -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img
+        id="avatar"
+        src="/Assets/avatar-placeholder.png"
+        alt="avatar"
+        class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"
+      />
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- ▸ SIDEBAR ---------------------------------------------------- -->
+    <aside
+      id="sidebar"
+      class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <!-- Botón para contraer/expandir -->
+      <button
+        id="toggleSide"
+        class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <!-- Menú de navegación -->
+      <nav class="flex flex-col gap-6 mt-6 px-6 text-sm">
+       <a href="/dashboard.html"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+
+        <a
+          href="/Asistentes/Biomo/biomo.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="activity" class="w-4 h-4"></i>
+          <span class="sidebar-label">Mis Biomos</span>
+        </a>
+
+        <a
+          href="/Asistentes/Convocatorias/convocatorias.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Nuevas Convocatorias</span>
+        </a>
+
+        <a
+          href="/Asistentes/Convocatorias/anteproyectos.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="layers" class="w-4 h-4"></i>
+          <span class="sidebar-label">Explorador Convocatorias</span>
+        </a>
+
+        <a
+          href="/Asistentes/Convocatorias/NuevoAnteproyecto.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2 text-green-400">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Anteproyectos</span>
+        </a>
+
+        <a
+          href="/Asistentes/Convocatorias/chat.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+
+        <a
+          href="/juego.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="play-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Videojuego</span>
+        </a>
+      </nav>
+
+      <!-- Botón cerrar sesión -->
+      <button
+        id="logoutBtn"
+        class="flex items-center gap-3 hover:text-red-400 py-2 px-6 mt-6">
+        <i data-feather="log-out" class="w-4 h-4"></i>
+        <span class="sidebar-label">Cerrar sesión</span>
+      </button>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+    <!-- ▸ CONTENIDO -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 mb-6 text-sm text-gray-400">
+        <button id="regresarBtn" class="flex items-center gap-2 hover:text-green-400 transition-colors">
+          <i data-feather="arrow-left" class="w-4 h-4"></i>
+          Regresar
+        </button>
+      </div>
+
+      <h1 class="text-2xl font-semibold mb-6">Mis Anteproyectos</h1>
+
+      <!-- Buscador & Crear -->
+      <div class="flex flex-wrap gap-4 items-center mb-6">
+        <div class="relative flex-1 min-w-[220px]">
+          <input id="searchInput" type="text" placeholder="Nombre del Anteproyecto" class="pl-10 pr-4 py-2 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 w-full" />
+          <i data-feather="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+        </div>
+        <button id="crearBtn" type="button" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm flex items-center gap-2">
+          <i data-feather="plus" class="w-4 h-4"></i>
+          Crear Nuevo Anteproyecto
+        </button>
+      </div>
+
+      <!-- Formulario de Creación (oculto por defecto) -->
+      <div id="formularioCreacion" class="hidden form-slide bg-gray-800 rounded-xl p-6 mb-6 border border-gray-700">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold">Nuevo Anteproyecto</h2>
+          <button id="cerrarFormBtn" class="text-gray-400 hover:text-white">
+            <i data-feather="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+
+        <form id="anteproyectoForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Primera columna -->
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Nombre del anteproyecto *</label>
+              <input 
+                type="text" 
+                name="titulo"
+                placeholder="Escribe..."
+                required
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Fecha de cierre *</label>
+              <input 
+                type="date" 
+                name="fecha_cierre"
+                required
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Convocatoria relacionada *</label>
+              <input 
+                type="text" 
+                name="convocatoria_rel"
+                placeholder="Escribe el nombre de la convocatoria..."
+                required
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <p class="text-xs text-gray-400 mt-1">Ejemplo: "Convocatoria Innovación 2024", "Proyecto de Investigación", etc.</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Sitio web</label>
+              <input 
+                type="url" 
+                name="sitio_web"
+                placeholder="https://..."
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Subir archivo (PDF, convocatoria, etc.) - Opcional</label>
+              <div class="flex items-center gap-4">
+                <label class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg cursor-pointer text-sm">
+                  Elegir archivo
+                  <input type="file" name="archivo_pdf" accept=".pdf,.doc,.docx" class="hidden" />
+                </label>
+                <span id="archivoNombre" class="text-gray-400 text-sm">No se eligió ningún archivo</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Segunda columna -->
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Región</label>
+              <input 
+                type="text" 
+                name="region"
+                placeholder="Escribe..."
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Organización</label>
+              <input 
+                type="text" 
+                name="organizacion"
+                placeholder="Escribe..."
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">País</label>
+              <input 
+                type="text" 
+                name="pais"
+                placeholder="Escribe..."
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+          </div>
+
+          <!-- Descripción (ancho completo) -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-2">Descripción</label>
+            <textarea 
+              name="descripcion"
+              placeholder="Escribe..."
+              rows="4"
+              class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            ></textarea>
+          </div>
+
+          <!-- Botón Guardar -->
+          <div class="md:col-span-2 flex justify-end">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex gap-8 border-b border-gray-600 mb-4 text-sm">
+        <button data-tab="activos" class="tab tab-active pb-2">Activos</button>
+        <button data-tab="finalizados" class="tab pb-2 text-gray-300">Finalizados</button>
+      </div>
+
+      <!-- Lista -->
+      <div id="listaAnteproyectos" class="flex flex-col gap-4"></div>
+    </main>
+  </div>
+
+<script>
+feather.replace();
+
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggleSide');
+if (toggleBtn) {
+  toggleBtn.onclick = () => {
+    sidebar.classList.toggle('w-64');
+    sidebar.classList.toggle('w-16');
+    sidebar.classList.toggle('collapsed');
+    const icon = toggleBtn.querySelector('svg');
+    icon.setAttribute('data-feather', sidebar.classList.contains('collapsed') ? 'chevron-right' : 'chevron-left');
+    feather.replace();
+  };
+}
+
+// Session & Avatar
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+const token = localStorage.getItem('token');
+if (!user.id_usuario || !token) {
+  document.body.innerHTML = '<h1 class="text-center mt-20 text-3xl">Mawi</h1><p class="text-center text-gray-400">Inicia sesión.</p>';
+  throw new Error('No auth');
+}
+document.getElementById('userName').textContent = user.nombre;
+const foto = localStorage.getItem('foto_perfil') || '';
+document.getElementById('avatar').src = foto.startsWith('/') ? foto : '/' + foto;
+
+// Botones de navegación
+document.getElementById('logoutBtn').onclick = () => {
+  sessionStorage.clear();
+  localStorage.clear();
+  location.href = '/index.html';
+};
+document.getElementById('profileBtn').onclick = () => location.href = '/Perfil/perfil.html';
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+    
+  };
+document.getElementById('regresarBtn').onclick = () => location.href = '/dashboard.html';
+
+// Formulario toggle
+const formulario = document.getElementById('formularioCreacion');
+const crearBtn = document.getElementById('crearBtn');
+const cerrarFormBtn = document.getElementById('cerrarFormBtn');
+
+crearBtn.onclick = () => {
+  formulario.classList.remove('hidden');
+  setTimeout(() => formulario.classList.add('show'), 10);
+};
+
+cerrarFormBtn.onclick = () => {
+  formulario.classList.remove('show');
+  setTimeout(() => formulario.classList.add('hidden'), 300);
+};
+
+// File input handler
+const fileInput = document.querySelector('input[type="file"]');
+const archivoNombre = document.getElementById('archivoNombre');
+fileInput.onchange = () => {
+  archivoNombre.textContent = fileInput.files[0]?.name || 'No se eligió ningún archivo';
+};
+
+// Tabs
+let estadoActual = 'activos';
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(t => t.onclick = () => {
+  estadoActual = t.dataset.tab;
+  tabs.forEach(b => b.classList.toggle('tab-active', b === t));
+  tabs.forEach(b => b.classList.toggle('text-gray-300', b !== t));
+  cargarLista();
+});
+
+// API: Cache de anteproyectos
+let cache = [];
+
+// ✅ CORREGIDO: Función fetch anteproyectos mejorada
+async function fetchAnteproyectos() {
+  try {
+    console.log('🔄 Cargando anteproyectos...');
+    const r = await fetch('/api/NuevoAnteproyectos', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    console.log('📡 Respuesta anteproyectos:', r.status, r.statusText);
+
+    if (!r.ok) {
+      throw new Error(`HTTP ${r.status} - ${r.statusText}`);
+    }
+
+    const data = await r.json();
+    console.log('📋 Datos recibidos:', data);
+    console.log('👤 Usuario actual ID:', user.id_usuario);
+    
+    // ✅ CORREGIR: Verificar si data es array y hacer debug del filtro
+    if (!Array.isArray(data)) {
+      console.warn('⚠️ Los datos no son un array:', typeof data);
+      cache = [];
+    } else {
+      // Debug del filtro
+      data.forEach(a => {
+        console.log(`📄 Anteproyecto: ${a.titulo} - Owner: ${a.id_usuario_owner} - Usuario: ${user.id_usuario} - Match: ${a.id_usuario_owner == user.id_usuario}`);
+      });
+      
+      // Filtrar solo los anteproyectos del usuario actual
+      cache = data.filter(a => a.id_usuario_owner == user.id_usuario); // ✅ Usar == en lugar de ===
+    }
+    
+    console.log(`✅ Anteproyectos filtrados: ${cache.length}`);
+    console.log('💾 Cache actual:', cache);
+    cargarLista();
+  } catch (err) {
+    console.error('❌ Error fetchAnteproyectos:', err);
+    cache = [];
+    cargarLista();
+  }
+}
+
+// ✅ CORREGIR la función cardHtml para determinar el estado correctamente
+function cardHtml(a) {
+  const fechaCierre = a.fecha_cierre ? new Date(a.fecha_cierre).toLocaleDateString() : "—";
+  const fechaCreacion = new Date(a.fecha_creacion).toLocaleDateString();
+  
+  // ✅ CORREGIR: Determinar estado basado en la fecha de cierre
+  const hoy = new Date();
+  const fechaCierreObj = new Date(a.fecha_cierre);
+  const estaActivo = fechaCierreObj >= hoy; // Si la fecha de cierre es hoy o en el futuro
+  
+  const estado = estaActivo ? 'Activo' : 'Finalizado';
+  const estadoColor = estaActivo ? 'text-green-400' : 'text-gray-400';
+  
+  console.log(`📅 Anteproyecto: ${a.titulo} - Cierre: ${a.fecha_cierre} - Hoy: ${hoy.toISOString().split('T')[0]} - Activo: ${estaActivo}`);
+  
+  return `
+    <div class="bg-gray-700/50 rounded-xl p-4 flex justify-between items-center shadow-md hover:bg-gray-700/70 transition-colors">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-2">
+          <h3 class="text-lg font-semibold">${a.titulo}</h3>
+          <span class="px-2 py-1 text-xs rounded-full bg-gray-800 ${estadoColor}">${estado}</span>
+        </div>
+        <p class="text-gray-300 text-sm mb-2 max-w-md">${a.descripcion || 'Sin descripción'}</p>
+        <div class="text-xs text-gray-400 flex gap-6">
+          <span>Creado: ${fechaCreacion}</span>
+          <span>Cierre: ${fechaCierre}</span>
+          ${a.organizacion ? `<span>Org: ${a.organizacion}</span>` : ''}
+          ${a.region ? `<span>Región: ${a.region}</span>` : ''}
+          ${a.convocatoria_rel ? `<span>Conv: ${a.convocatoria_rel}</span>` : ''}
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+       
+
+      </div>
+    </div>`;
+}
+
+// ✅ CORREGIR también el filtro de tabs para usar fechas
+function cargarLista() {
+  const lista = document.getElementById('listaAnteproyectos');
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  
+  console.log('🔍 Filtrando lista:', { estadoActual, totalCache: cache.length });
+  
+  const filtrado = cache.filter(a => {
+    // ✅ CORREGIR: Filtrar basado en fechas reales
+    const hoy = new Date();
+    const fechaCierreObj = new Date(a.fecha_cierre);
+    const estaActivo = fechaCierreObj >= hoy;
+    
+    const coincideEstado = estadoActual === 'activos' ? 
+      estaActivo : // Solo activos (fecha futura)
+      !estaActivo; // Solo finalizados (fecha pasada)
+    
+    const coincideSearch = !query || a.titulo.toLowerCase().includes(query);
+    
+    console.log('📋 Anteproyecto:', a.titulo, 'Fecha cierre:', a.fecha_cierre, 'Activo:', estaActivo, 'Coincide:', coincideEstado && coincideSearch);
+    
+    return coincideEstado && coincideSearch;
+  });
+  
+  console.log('✅ Filtrados:', filtrado.length);
+  
+  lista.innerHTML = filtrado.length ? 
+    filtrado.map(cardHtml).join('') : 
+    `<div class="text-center py-8">
+      <div class="text-gray-400 text-6xl mb-4">📄</div>
+      <p class="text-gray-400">No tienes anteproyectos ${estadoActual}</p>
+      <p class="text-sm text-gray-500 mt-2">Crea tu primer anteproyecto usando el botón verde</p>
+    </div>`;
+  feather.replace();
+}
+
+// ✅ FUNCIONES CRUD que faltaban
+async function crearAnteproyecto(formData) {
+  try {
+    console.log('🚀 Creando anteproyecto...');
+    
+    // Validar que se haya escrito una convocatoria
+    const convocatoriaNombre = formData.get('convocatoria_rel');
+    if (!convocatoriaNombre || convocatoriaNombre.trim() === '') {
+      alert('Por favor escribe el nombre de la convocatoria relacionada');
+      return;
+    }
+    
+    // Agregar el ID del usuario al FormData
+    formData.append('id_usuario_owner', user.id_usuario);
+    
+    // Log de los datos que se van a enviar
+    console.log('📋 Datos del formulario:');
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+    
+    const response = await fetch('/api/NuevoAnteproyectos', { // ✅ CAMBIAR aquí
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
+    });
+    
+    console.log('📡 Respuesta:', response.status, response.statusText);
+    
+    if (response.ok) {
+      // Cerrar formulario
+      formulario.classList.remove('show');
+      setTimeout(() => formulario.classList.add('hidden'), 300);
+      
+      // Limpiar formulario
+      document.getElementById('anteproyectoForm').reset();
+      archivoNombre.textContent = 'No se eligió ningún archivo';
+      
+      // Recargar lista
+      await fetchAnteproyectos();
+      
+      alert('✅ Anteproyecto creado exitosamente');
+    } else {
+      const errorText = await response.text();
+      console.error('❌ Error del servidor:', errorText);
+      throw new Error(errorText || 'Error al crear anteproyecto');
+    }
+  } catch (error) {
+    console.error('❌ Error:', error);
+    alert('❌ Error al crear el anteproyecto: ' + error.message);
+  }
+}
+
+function editarAnteproyecto(id) {
+  console.log('Editar anteproyecto:', id);
+  alert('Función de edición próximamente disponible');
+}
+
+// ✅ CORREGIR la función eliminarAnteproyecto
+async function eliminarAnteproyecto(id) {
+  if (confirm('¿Estás seguro de eliminar este anteproyecto?')) {
+    try {
+      const response = await fetch(`/api/NuevoAnteproyectos/${id}`, { // ✅ CAMBIAR aquí
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        fetchAnteproyectos();
+        alert('Anteproyecto eliminado exitosamente');
+      } else {
+        throw new Error('Error al eliminar');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al eliminar el anteproyecto');
+    }
+  }
+}
+
+// ✅ EVENT LISTENERS que faltaban
+// Form submit
+document.getElementById('anteproyectoForm').onsubmit = (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  crearAnteproyecto(formData);
+};
+
+// Search
+document.getElementById('searchInput').oninput = cargarLista;
+
+// ✅ CARGA INICIAL SIMPLIFICADA - Solo anteproyectos
+console.log('🚀 Inicializando página de anteproyectos...');
+fetchAnteproyectos();
+</script>
+</body>
+</html>

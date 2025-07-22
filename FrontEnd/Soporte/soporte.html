@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soporte</title>
+  <link rel="stylesheet" href="/Estilos/soporte.css" />
+</head>
+<body>
+
+  <div class="container">
+    <!-- Botón para cerrar -->
+    <div class="close-button" onclick="window.parent.document.getElementById('supportIframe').style.display = 'none'">✖</div>
+
+    <div class="soporte-card">
+      <div class="formulario">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" placeholder="Escribe...">
+
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" placeholder="Escribe...">
+
+        <label for="asunto">Asunto</label>
+        <input type="text" id="asunto" placeholder="Escribe...">
+
+        <label for="descripcion">Descripción del problema</label>
+        <textarea id="descripcion" placeholder="Escribe..."></textarea>
+      </div>
+
+      <div class="info-soporte">
+        <p><strong>Horarios de atención al usuario:</strong></p>
+        <ul>
+          <li>Lunes a Viernes: de 09:00 AM a 18:00 PM</li>
+        </ul>
+        <p><strong>Número de contacto:</strong> +00 000 000 000</p>
+        <p><strong>Correo del soporte:</strong> soporte.mawi.org@awak.com</p>
+
+        <button>Enviar datos</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

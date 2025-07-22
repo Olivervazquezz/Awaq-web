@@ -1,0 +1,159 @@
+<!-- Ubicación: /Views/super/biomosUsuario.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Biomos del Usuario – Mawi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    .collapsed .sidebar-label {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col font-sans">
+
+  <!-- NAVBAR -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700" />
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+        <a href="/Views/usuarios.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="user-check" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de EcoRangers</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn" class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+      <button id="supportBtn" class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Contacta con el soporte</span>
+      </button>
+    </aside>
+
+    <!-- CONTENIDO -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <h1 class="text-2xl font-bold mb-6">Biomos del Usuario</h1>
+      <div id="biomos-list" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"></div>
+    </main>
+  </div>
+
+  <script>
+    feather.replace();
+
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSide');
+    toggleBtn.onclick = () => {
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-16');
+      sidebar.classList.toggle('collapsed');
+      toggleBtn.querySelector('svg').classList.toggle('rotate-180');
+    };
+
+    // Datos navbar
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user?.nombre) document.getElementById('userName').textContent = user.nombre;
+    const foto = localStorage.getItem('foto_perfil');
+    if (foto) document.getElementById('avatar').src = foto;
+
+    document.getElementById('logoutBtn').onclick = () => {
+      sessionStorage.clear();
+      localStorage.clear();
+      location.href = '/index.html';
+    };
+    document.getElementById('profileBtn').onclick = () => location.href = '/Perfil/perfilSuper.html';
+    document.getElementById('supportBtn').onclick = () => location.href = 'mailto:soporte@mawi.com';
+
+    // ID usuario de query
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    async function cargarBiomos() {
+      if (!token || !id) return alert("Token o ID inválido");
+
+      try {
+        const res = await fetch(`/api/super/biomos/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const biomos = await res.json();
+
+        const contenedor = document.getElementById('biomos-list');
+        if (!biomos.length) {
+          contenedor.innerHTML = '<p class="text-gray-400">Este usuario no tiene biomos registrados.</p>';
+          return;
+        }
+
+        contenedor.innerHTML = biomos.map(b => {
+          let img = '/Assets/avatar-placeholder.png';
+          try {
+            const i = JSON.parse(b.imagenes || '[]');
+            img = Array.isArray(i) && i.length > 0 ? `/imagesBiomos/${i[0]}` : img;
+          } catch {}
+
+          return `
+            <div class="bg-gray-800 rounded-lg shadow-md p-4">
+              <img src="${img}" class="rounded w-full h-44 object-cover mb-2" />
+              <h2 class="text-lg font-bold">Biomo #${b.id_reporte}</h2>
+              <p><strong>Tipo:</strong> ${b.record_type}</p>
+              <p><strong>Ecosistema:</strong> ${b.tipo_ecosistema}</p>
+              <p><strong>Fecha:</strong> ${new Date(b.fecha_reporte).toLocaleDateString()}</p>
+            </div>`;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+        alert("Error al cargar biomos.");
+      }
+    }
+
+    cargarBiomos();
+  </script>
+</body>
+</html>

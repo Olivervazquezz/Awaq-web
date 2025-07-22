@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - ¿De dónde eres?</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+<body class="recuperar">
+  <div class="card-container">
+    <h2 class="tittle">¿De dónde eres?</h2>
+    <p class="subtitle">Completa tu usuario agregando esta información</p>
+
+    <form id="locForm" class="login-form">
+      <label for="pais">País</label>
+      <input type="text" id="pais" placeholder="Escribe..." required />
+
+      <label for="telefono">Prefijo + Número telefónico</label>
+      <input type="tel" id="telefono" placeholder="Escribe..." required />
+
+      <label for="region">Provincia / Región</label>
+      <input type="text" id="region" placeholder="Escribe..." required />
+
+      <label for="ciudad">Ciudad</label>
+      <input type="text" id="ciudad" placeholder="Escribe..." required />
+
+      <label for="cp">Código postal</label>
+      <input type="text" id="cp" placeholder="Opcional" />
+
+      <button type="submit" class="btn-green">Siguiente</button>
+    </form>
+
+    <p class="support-link">
+      <a href="#" onclick="toggleSoporte()">¿Necesitas ayuda? Contacta con nosotros</a>
+    </p>
+  </div>
+
+  <!-- Contenedor de soporte -->
+  <div id="overlaySoporte" class="overlay"></div>
+
+  <script>
+    const locForm = document.getElementById('locForm');
+    locForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        pais         : pais.value,
+        telefono     : telefono.value,
+        region       : region.value,
+        ciudad       : ciudad.value,
+        codigo_postal: cp.value
+      };
+
+      const res = await fetch('http://localhost:3000/api/users/location', {
+        method : 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization : 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (!res.ok) return alert(data.error);
+
+      location.href = 'datos-organizacion.html';
+    });
+  </script>
+
+  <!-- Script para soporte -->
+  <script>
+    const toggleSoporte = async () => {
+      const overlay = document.getElementById('overlaySoporte');
+
+      if (overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
+        overlay.innerHTML = '';
+        return;
+      }
+
+      const res = await fetch('/Soporte/soporte.html');
+      const html = await res.text();
+      overlay.innerHTML = html;
+      overlay.classList.add('visible');
+    };
+
+    function cerrarSoporte() {
+      const overlay = document.getElementById('overlaySoporte');
+      overlay.classList.remove('visible');
+      overlay.innerHTML = '';
+    }
+  </script>
+</body>
+</html>

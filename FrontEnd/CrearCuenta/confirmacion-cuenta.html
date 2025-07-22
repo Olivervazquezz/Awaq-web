@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - Confirmación de cuenta</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+<body class="recuperar">
+  <div class="card-container"> 
+    <h2 class="tittle">¡Tu cuenta ha sido creada exitosamente!</h2>
+    <p class="subtitle">Ya puedes comenzar a utilizar Mawi y explorar todas sus funciones</p>
+
+    <button type="button" class="btn-green" id="btnComenzar">Comenzar</button>
+  </div>
+
+  <script>
+    document.getElementById("btnComenzar").addEventListener("click", function () {
+      window.location.href = "/login.html";
+    });
+  </script>
+</body>
+</html>

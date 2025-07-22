@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - Organización</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+<body class="recuperar">
+  <div class="card-container">
+    <h2 class="tittle">¿Con quién trabajas?</h2>
+    <p class="subtitle">Completa tu usuario agregando esta información</p>
+
+    <form id="orgForm" class="login-form">
+      <label for="organizacion">Nombre de la organización*</label>
+      <input type="text" id="organizacion" placeholder="Escribe..." required />
+
+      <label for="descripcion">Descripción de la organización*</label>
+      <textarea id="descripcion" maxlength="200" placeholder="Escribe..." required></textarea>
+
+      <button type="submit" class="btn-green">Guardar</button>
+    </form>
+
+    <p class="support-link">
+      <a href="#" onclick="toggleSoporte()">¿Necesitas ayuda? Contacta con nosotros</a>
+    </p>
+  </div>
+
+  <!-- Contenedor del soporte -->
+  <div id="overlaySoporte" class="overlay"></div>
+
+  <script>
+    const orgForm = document.getElementById('orgForm');
+    orgForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        organizacion: organizacion.value,
+        descripcion_organizacion: descripcion.value
+      };
+
+      const res = await fetch('http://localhost:3000/api/users/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (!res.ok) return alert(data.error);
+
+      location.href = 'confirmacion-cuenta.html';
+    });
+  </script>
+
+  <!-- Script para soporte -->
+  <script>
+    const toggleSoporte = async () => {
+      const overlay = document.getElementById('overlaySoporte');
+
+      if (overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
+        overlay.innerHTML = '';
+        return;
+      }
+
+      const res = await fetch('/Soporte/soporte.html');
+      const html = await res.text();
+      overlay.innerHTML = html;
+      overlay.classList.add('visible');
+    };
+
+    function cerrarSoporte() {
+      const overlay = document.getElementById('overlaySoporte');
+      overlay.classList.remove('visible');
+      overlay.innerHTML = '';
+    }
+  </script>
+</body>
+</html>

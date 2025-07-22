@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - Recuperar contraseña</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+<body class="recuperar">
+  <div class="card-container recuperar-card">
+    <h2 class="tittle">Recuperar contraseña</h2>
+    <p class="subtitle">Ingresa el correo asociado a tu cuenta y te enviaremos instrucciones.</p>
+
+    <form id="recoverForm" class="login-form">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" placeholder="Escribe..." required />
+      <button type="submit" class="btn-green">Enviar correo</button>
+    </form>
+
+    <p class="support-link">
+      <a href="#" onclick="toggleSoporte()">¿Necesitas ayuda? Contacta con nosotros</a>
+    </p>
+  </div>
+
+  <!-- Contenedor para la tarjeta de soporte -->
+  <div id="overlaySoporte" class="overlay"></div>
+
+  <script>
+    document.getElementById('recoverForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/recover-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          window.location.href = 'correo-enviado.html';
+        } else {
+          alert(data.error || 'Error al enviar el correo.');
+        }
+      } catch (err) {
+        console.error('Error al enviar correo de recuperación:', err);
+        alert('Ocurrió un error. Intenta nuevamente.');
+      }
+    });
+
+    const toggleSoporte = async () => {
+      const overlay = document.getElementById('overlaySoporte');
+
+      if (overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
+        overlay.innerHTML = '';
+        return;
+      }
+
+      const res = await fetch('/Soporte/soporte.html');
+      const html = await res.text();
+      overlay.innerHTML = html;
+      overlay.classList.add('visible');
+    };
+
+    function cerrarSoporte() {
+      const overlay = document.getElementById('overlaySoporte');
+      overlay.classList.remove('visible');
+      overlay.innerHTML = '';
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Videojuego – VITA NOVA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif}
+    .sidebar-label{transition:opacity .2s}
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none}
+    #unityContainer {
+      width: 960px;
+      height: 600px;
+      margin: 32px auto 0 auto;
+      border: 2px solid #ccc;
+      background: #222;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1rem;
+    }
+    @media (max-width: 1000px) {
+      #unityContainer { width: 100vw; height: 60vw; min-height: 300px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ▸ NAVBAR ------------------------------------------------------ -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img
+        id="avatar"
+        src="/Assets/avatar-placeholder.png"
+        alt="avatar"
+        class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"
+      />
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- ▸ SIDEBAR ---------------------------------------------------- -->
+    <aside
+      id="sidebar"
+      class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <!-- Botón para contraer/expandir -->
+      <button
+        id="toggleSide"
+        class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <!-- Menú de navegación -->
+      <nav class="flex flex-col gap-6 mt-6 px-6 text-sm">
+       <a href="/dashboard.html"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+
+        <a
+          href="/FrontEnd/Asistentes/Biomo/biomo.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="activity" class="w-4 h-4"></i>
+          <span class="sidebar-label">Mis Biomos</span>
+        </a>
+
+        <a
+          href="/Asistentes/Convocatorias/convocatorias.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Nuevas Convocatorias</span>
+        </a>
+
+        <a
+          href="/Asistentes\Convocatorias\anteproyectos.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="layers" class="w-4 h-4"></i>
+          <span class="sidebar-label">Explorador Convocatorias</span>
+        </a>
+
+         <a
+          href="/Asistentes\Convocatorias\NuevoAnteproyecto.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label"> Anteproyectos </span>
+        </a>
+
+        <a
+          href="/FrontEnd/Asistentes/Convocatorias/chat.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+
+        <a
+          href="/juego.html"
+          class="flex items-center gap-3 text-green-400 py-2">
+          <i data-feather="play-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Videojuego</span>
+        </a>
+      </nav>
+
+      <!-- Botón cerrar sesión -->
+      <button
+        id="logoutBtn"
+        class="flex items-center gap-3 hover:text-red-400 py-2 px-6 mt-6">
+        <i data-feather="log-out" class="w-4 h-4"></i>
+        <span class="sidebar-label">Cerrar sesión</span>
+      </button>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+
+    <iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+    <!-- ✅ CONTENIDO PRINCIPAL (conservado) -->
+    <main class="main-content">
+      <h2 class="text-2xl font-bold text-white mb-4">¡Bienvenido al videojuego de VITA NOVA!</h2>
+      <div id="unityContainer"></div>
+    </main>
+  </div>
+
+  <!-- ✅ SCRIPTS ACTUALIZADOS -->
+  <script>
+    feather.replace();
+
+    // ✅ Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSide');
+    if (toggleBtn) {
+      toggleBtn.onclick = () => {
+        sidebar.classList.toggle('w-64');
+        sidebar.classList.toggle('w-16');
+        sidebar.classList.toggle('collapsed');
+        const icon = toggleBtn.querySelector('svg');
+        icon.setAttribute('data-feather', sidebar.classList.contains('collapsed') ? 'chevron-right' : 'chevron-left');
+        feather.replace();
+      };
+    }
+
+    // ✅ Verificación de autenticación
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!token || !user.id_usuario) {
+      document.body.innerHTML = '<h1 class="text-center mt-20 text-3xl">Mawi</h1><p class="text-center text-gray-400">Inicia sesión.</p>';
+      setTimeout(() => window.location.href = '/index.html', 2000);
+      throw new Error('No auth');
+    }
+
+    // ✅ Datos del usuario en navbar
+    document.getElementById('userName').textContent = user.nombre || 'Usuario';
+    const foto = localStorage.getItem('foto_perfil') || '/Assets/avatar-placeholder.png';
+    document.getElementById('avatar').src = foto.startsWith('/') ? foto : '/' + foto;
+
+    // ✅ Botones de navegación
+    document.getElementById('profileBtn').onclick = () => location.href = '/Perfil/perfil.html';
+    
+    // ✅ Mostrar/ocultar iframe de soporte
+    document.getElementById('supportBtn').onclick = function() {
+      const iframe = document.getElementById('supportIframe');
+      iframe.style.display = iframe.style.display === 'none' ? 'block' : 'none';
+    };
+    
+    document.getElementById('logoutBtn').onclick = () => {
+      sessionStorage.clear();
+      localStorage.clear();
+      window.location.href = '/index.html';
+    };
+
+    // ✅ Cargar datos del usuario (conservado)
+    async function fetchUserData() {
+      try {
+        const res = await fetch('/api/users/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error('No se pudo cargar el usuario');
+        const userData = await res.json();
+        document.title = `Videojuego – ${userData.nombre || 'VITA NOVA'}`;
+      } catch (err) {
+        console.error('Error de autenticación:', err);
+        // No redirigir automáticamente, solo log del error
+      }
+    }
+    fetchUserData();
+
+    // ✅ Cargar el juego automáticamente (conservado)
+    window.onload = () => {
+      const unityContainer = document.getElementById("unityContainer");
+      // Solo agregar iframe si no está presente
+      if (!document.getElementById("unityIframe")) {
+        const iframe = document.createElement("iframe");
+        iframe.id = "unityIframe";
+        iframe.src = "UnityGame/index.html";
+        iframe.width = "960";
+        iframe.height = "600";
+        iframe.style.border = "none";
+        iframe.allowFullscreen = true;
+        unityContainer.appendChild(iframe);
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!-- Ubicación sugerida: /FrontEnd/Perfil/imagen-perfil.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - Imagen de perfil</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+
+<body class="recuperar">
+  <div class="card-container">
+    <h2 class="tittle">Sube tu imagen de perfil</h2>
+    <p class="subtitle">Arrastra y suelta o selecciona un archivo</p>
+
+    <!-- Zona de carga -->
+    <div id="dropZone" class="upload-container">
+      <input type="file" id="fileInput" class="file-input" accept="image/*" />
+      <label for="fileInput" class="btn-green">Elegir archivo</label>
+    </div>
+
+    <!-- Vista previa -->
+    <img id="previewImg" class="preview-img" alt="Vista previa de la imagen" />
+
+    <p id="fileName" class="file-name">No se eligió ningún archivo</p>
+
+    <!-- Botones de acción -->
+    <button class="btn-green" id="uploadButton">Siguiente</button>
+    <button class="btn-secondary" id="skipButton">Omitir por ahora</button>
+
+    <p class="support-link">
+      <a href="#" onclick="toggleSoporte()">¿Necesitas ayuda? Contacta con nosotros</a>
+    </p>
+  </div>
+
+  <!-- Overlay para soporte -->
+  <div id="overlaySoporte" class="overlay"></div>
+
+  <script>
+    const fileInput    = document.getElementById('fileInput');
+    const fileNameEl   = document.getElementById('fileName');
+    const uploadButton = document.getElementById('uploadButton');
+    const skipButton   = document.getElementById('skipButton');
+    const dropZone     = document.getElementById('dropZone');
+    const previewImg   = document.getElementById('previewImg');
+    const token        = localStorage.getItem('token');
+
+    const showPreview = file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        previewImg.classList.add('visible');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      fileNameEl.textContent = file ? file.name : 'No se eligió ningún archivo';
+      if (file) showPreview(file);
+    });
+
+    ['dragenter', 'dragover'].forEach(evt =>
+      dropZone.addEventListener(evt, e => {
+        e.preventDefault();
+        dropZone.classList.add('highlight');
+      })
+    );
+    ['dragleave', 'drop'].forEach(evt =>
+      dropZone.addEventListener(evt, e => {
+        e.preventDefault();
+        dropZone.classList.remove('highlight');
+      })
+    );
+    dropZone.addEventListener('drop', e => {
+      const files = e.dataTransfer.files;
+      if (files.length) {
+        fileInput.files = files;
+        fileNameEl.textContent = files[0].name;
+        showPreview(files[0]);
+      }
+    });
+
+    uploadButton.addEventListener('click', async () => {
+      if (!fileInput.files[0]) {
+        return alert('Por favor, selecciona una imagen primero.');
+      }
+      if (!token) {
+        return alert('Token no encontrado. Vuelve a iniciar sesión.');
+      }
+
+      const fd = new FormData();
+      fd.append('foto', fileInput.files[0]);
+
+      try {
+        const res  = await fetch('http://localhost:3000/api/users/profile', {
+          method : 'PUT',
+          headers: { Authorization: 'Bearer ' + token },
+          body   : fd
+        });
+        const data = await res.json();
+        if (!res.ok) return alert(data.error);
+
+        localStorage.setItem('foto_perfil', data.foto_perfil);
+        window.location.href = 'datos-ubicacion.html';
+      } catch (err) {
+        console.error(err);
+        alert('Error al subir la imagen');
+      }
+    });
+
+    skipButton.addEventListener('click', () => {
+      window.location.href = 'datos-ubicacion.html';
+    });
+  </script>
+
+  <!-- Script de soporte -->
+  <script>
+    const toggleSoporte = async () => {
+      const overlay = document.getElementById('overlaySoporte');
+
+      if (overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
+        overlay.innerHTML = '';
+        return;
+      }
+
+      const res = await fetch('/Soporte/soporte.html');
+      const html = await res.text();
+      overlay.innerHTML = html;
+      overlay.classList.add('visible');
+    };
+
+    function cerrarSoporte() {
+      const overlay = document.getElementById('overlaySoporte');
+      overlay.classList.remove('visible');
+      overlay.innerHTML = '';
+    }
+  </script>
+</body>
+</html>

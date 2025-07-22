@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cambio de contraseña – Mawi</title>
+
+  <!-- Tailwind + Feather Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- Tu CSS compartido para Perfil (y ahora también Cambio de contraseña) -->
+  <link rel="stylesheet" href="/Estilos/perfil.css" />
+
+  <style>
+    /* Aseguramos que la X de cerrar no choque con navbar */
+    .btn-cerrar {
+      position: absolute;
+      top: 1rem; 
+      right: 1rem;
+      font-size: 1.25rem;
+      color: #fff;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-cerrar:hover {
+      color: #f87171; /* rojo suave */
+    }
+    /* Ajustes puntuales extra (si gustas) */
+    body { background: #353535; }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- ─────────── NAVBAR ─────────── -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <!-- Icono “ojo” de Mawi -->
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img id="avatar"
+           src="/Assets/avatar-placeholder.png"
+           alt="avatar"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700" />
+    </div>
+  </header>
+
+  <!-- ─────────── CONTENEDOR PRINCIPAL ─────────── -->
+  <div class="flex flex-grow overflow-hidden">
+    <!-- ─── SIDEBAR ─── -->
+    <aside id="sidebar"
+           class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <!-- Botón para contraer/expandir -->
+      <button id="toggleSide"
+              class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4 text-gray-300"></i>
+      </button>
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/dashboard.html"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/FrontEnd/Asistentes/Biomo/biomo.html"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="activity" class="w-4 h-4"></i>
+          <span class="sidebar-label">Mis Biomos</span>
+        </a>
+        <a href="#"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Nuevas Convocatorias</span>
+        </a>
+        <a href="#"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="layers" class="w-4 h-4"></i>
+          <span class="sidebar-label">Explorador Anteproyectos</span>
+        </a>
+        <a href="/FrontEnd/Asistentes/Convocatorias/chat.html"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="#"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="play-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Videojuego</span>
+        </a>
+
+        <!-- Botón “Cerrar sesión” -->
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button id="supportBtn"
+              class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+
+    <!-- ─── CONTENIDO DE CAMBIO CONTRASEÑA ─── -->
+    <main class="flex-1 overflow-y-auto flex justify-center items-start pt-10 px-4">
+      <div class="relative perfil-card w-full max-w-md mb-12">
+        <!-- Botón “Cerrar” (dentro de la card, para no chocar con el navbar) -->
+        <button class="btn-cerrar" title="Volver al perfil"
+                onclick="location.href='/Perfil/perfil.html'">
+          &times;
+        </button>
+
+        <!-- Título -->
+        <h2 class="text-3xl font-bold mb-6 text-center">Cambio de contraseña</h2>
+
+        <!-- Mensaje de estado (error o éxito) -->
+        <div id="statusMsg" class="text-center text-sm mb-4"></div>
+
+        <!-- Formulario -->
+        <form id="changePassForm" class="w-full flex flex-col gap-4">
+          <div>
+            <label for="currentPassword" class="font-semibold text-sm">Contraseña actual</label>
+            <input id="currentPassword"
+                   type="password"
+                   class="bg-transparent border-none border-b border-gray-600 w-full text-white px-1 pb-1 focus:outline-none focus:border-green-400"
+                   placeholder="********"
+                   required />
+          </div>
+          <div>
+            <label for="newPassword" class="font-semibold text-sm">Nueva contraseña</label>
+            <input id="newPassword"
+                   type="password"
+                   class="bg-transparent border-none border-b border-gray-600 w-full text-white px-1 pb-1 focus:outline-none focus:border-green-400"
+                   placeholder="********"
+                   required />
+          </div>
+          <div>
+            <label for="confirmPassword" class="font-semibold text-sm">Confirmar nueva contraseña</label>
+            <input id="confirmPassword"
+                   type="password"
+                   class="bg-transparent border-none border-b border-gray-600 w-full text-white px-1 pb-1 focus:outline-none focus:border-green-400"
+                   placeholder="********"
+                   required />
+          </div>
+
+          <!-- Botón “Cambiar contraseña” -->
+          <button
+            type="submit"
+            id="submitBtn"
+            class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded flex items-center justify-center gap-2 transition"
+          >
+            <i data-feather="lock" class="w-5 h-5"></i>
+            <span>Cambiar contraseña</span>
+          </button>
+        </form>
+
+        <!-- Botón Soporte central (dentro de la card) -->
+        <button id="centerSupport"
+                class="btn-soporte mt-6 w-full justify-center">
+          <i data-feather="phone" class="w-5 h-5"></i>
+          <span>Contacta con el soporte</span>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ─── JS PARA SIDEBAR / FORMA DE CAMBIO CONTRASEÑA ─── -->
+  <script>
+    feather.replace();
+
+    /* 1) Contraer / expandir sidebar */
+    const sidebar   = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSide');
+    const arrow     = toggleBtn.querySelector('svg');
+    toggleBtn.onclick = () => {
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-16');
+      sidebar.classList.toggle('collapsed');
+      arrow.classList.toggle('rotate-180');
+    };
+
+    /* 2) Cargar datos básicos del usuario */
+    // Obtenemos JSON del user guardado en localStorage al iniciar sesión
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.nombre) {
+      document.getElementById('userName').textContent = user.nombre;
+    }
+    // Cargar foto de perfil
+    let fotoRuta = localStorage.getItem('foto_perfil') || '';
+    if (fotoRuta) {
+      if (!fotoRuta.startsWith('/')) fotoRuta = '/' + fotoRuta;
+      document.getElementById('avatar').src = fotoRuta;
+    } else {
+      document.getElementById('avatar').src = '/Assets/avatar-placeholder.png';
+    }
+
+    /* 3) “Cerrar sesión” */
+    document.getElementById('logoutBtn').onclick = () => {
+      sessionStorage.clear();
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('foto_perfil');
+      location.href = '/index.html';
+    };
+
+    /* 4) “Soporte” */
+    const sendMail = () => location.href = 'mailto:soporte@mawi.com';
+    document.getElementById('supportBtn').onclick    = sendMail;
+    document.getElementById('centerSupport').onclick = sendMail;
+
+    /* 5) Lógica para “Cambio de contraseña” */
+    const form       = document.getElementById('changePassForm');
+    const statusDiv  = document.getElementById('statusMsg');
+    const submitBtn  = document.getElementById('submitBtn');
+    const token      = localStorage.getItem('token') || '';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusDiv.textContent = '';
+      statusDiv.className = '';
+
+      const currentPassword = document.getElementById('currentPassword').value.trim();
+      const newPassword     = document.getElementById('newPassword').value.trim();
+      const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+      // Validaciones sencillas en el cliente
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        statusDiv.textContent = 'Todos los campos son obligatorios.';
+        statusDiv.classList.add('text-red-400');
+        return;
+      }
+      if (newPassword.length < 6) {
+        statusDiv.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
+        statusDiv.classList.add('text-red-400');
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        statusDiv.textContent = 'La confirmación no coincide.';
+        statusDiv.classList.add('text-red-400');
+        return;
+      }
+
+      // Deshabilitar botón mientras enviamos la petición
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      try {
+        const res = await fetch('/api/users/change-password', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          // Mostrar mensaje de error
+          statusDiv.textContent = data.error || 'Error desconocido';
+          statusDiv.classList.add('text-red-400');
+        } else {
+          // Éxito
+          statusDiv.textContent = 'Contraseña cambiada correctamente.';
+          statusDiv.classList.add('text-green-400');
+          // Opcional: redirigir de vuelta al perfil después de unos segundos
+          setTimeout(() => {
+            location.href = '/Perfil/perfil.html';
+          }, 2000);
+        }
+      } catch (err) {
+        console.error(err);
+        statusDiv.textContent = 'Error de red. Intenta nuevamente.';
+        statusDiv.classList.add('text-red-400');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    });
+  </script>
+</body>
+</html>

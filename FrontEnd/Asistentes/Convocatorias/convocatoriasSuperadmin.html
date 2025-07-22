@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mawi – Super-Admin</title>
+
+  <!-- Tailwind & Feather Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif}
+    .sidebar-label{transition:opacity .2s}
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none}
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ▸ NAVBAR ------------------------------------------------------ -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"/>
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+          </a>
+                <a href="/Asistentes\Convocatorias\convocatoriasSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Convocatorias</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/anteproyectosSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+
+        <a href="/Asistentes\Convocatorias\chatsuper.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+    <!-- ▸ CONTENIDO --------------------------------------------------- -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <h1 class="text-2xl font-semibold mb-6">Explorador Convocatorias</h1>
+
+      <!-- Buscador + Crear -->
+      <form id="searchForm" class="flex flex-wrap gap-4 items-center mb-6">
+        <div class="relative flex-1 min-w-[220px]">
+          <input id="searchInput" type="text" placeholder="Nombre de la Convocatoria"
+                 class="pl-10 pr-4 py-2 rounded-lg bg-gray-700 placeholder-gray-400
+                        focus:outline-none focus:ring-2 focus:ring-green-500 w-full"/>
+          <i data-feather="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+        </div>
+        <button id="crearBtn" type="button"
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm">
+          Crear Nueva Convocatoria
+        </button>
+      </form>
+
+      <!-- Pestañas -->
+      <div class="flex gap-8 border-b border-gray-600 mb-4 text-sm">
+        <button data-tab="activos"     class="tab tab-active pb-2">Activos</button>
+        <button data-tab="finalizados" class="tab pb-2 text-gray-300">Finalizados</button>
+      </div>
+
+      <!-- Lista -->
+      <div id="listaAnteproyectos" class="flex flex-col gap-4"></div>
+    </main>
+  </div>
+
+  <!-- ▸ SCRIPTS ------------------------------------------------------ -->
+  <script>
+  /* ——— Iconos ——— */
+  feather.replace();
+
+  /* ——— Sidebar colapsable ——— */
+  const sidebar   = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('toggleSide');
+  toggleBtn.onclick = () => {
+    sidebar.classList.toggle('w-64');
+    sidebar.classList.toggle('w-16');
+    sidebar.classList.toggle('collapsed');
+    const icon = toggleBtn.querySelector('svg');
+    icon.setAttribute('data-feather',
+      sidebar.classList.contains('collapsed') ? 'chevron-right' : 'chevron-left');
+    feather.replace();
+  };
+
+  /* ——— Sesión ——— */
+  const user  = JSON.parse(localStorage.getItem('user') || '{}');
+  const token = localStorage.getItem('token');
+  if (!user.id_usuario || !token) {
+    document.body.innerHTML =
+      '<h1 class="text-center mt-20 text-3xl">Por favor inicia sesión</h1>';
+    throw new Error('No auth');
+  }
+  document.getElementById('userName').textContent = user.nombre;
+  const foto = localStorage.getItem('foto_perfil') || '/Assets/avatar-placeholder.png';
+  document.getElementById('avatar').src = foto.startsWith('/') ? foto : '/' + foto;
+
+  /* ——— Botones rápidos ——— */
+  document.getElementById('logoutBtn').onclick = () => {
+    sessionStorage.clear();
+    localStorage.clear();
+    location.href = '/index.html';
+  };
+  document.getElementById('profileBtn').onclick = () =>
+    location.href = '/Perfil/perfil.html';
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };
+
+  /* ——— Pestañas ——— */
+  let estadoActual = 'activos';
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.onclick = () =>{
+      estadoActual = btn.dataset.tab;
+      document.querySelectorAll('.tab').forEach(b=>{
+        b.classList.toggle('tab-active',    b===btn);
+        b.classList.toggle('text-gray-300', b!==btn);
+      });
+      cargarLista();
+    };
+  });
+
+  /* ——— Fetch & cache ——— */
+  let cache = [];
+  async function fetchAnteproyectos(){
+    try{
+      const r = await fetch('/api/anteproyectos',{
+        headers:{Authorization:`Bearer ${token}`}
+      });
+      if(!r.ok) throw new Error(`HTTP ${r.status}`);
+      cache = await r.json();
+      cargarLista();
+    }catch(err){
+      console.error('[Error fetchAnteproyectos]',err);
+      document.getElementById('listaAnteproyectos').innerHTML =
+        '<p class="text-red-500">No se pudo cargar la lista.</p>';
+    }
+  }
+
+  /* ——— Tarjeta ——— */
+  function cardHtml(c){
+    const creado = new Date(c.fecha_creacion).toLocaleDateString();
+    const cierre = c.fecha_cierre
+                     ? new Date(c.fecha_cierre).toLocaleDateString()
+                     : '—';
+    const badge  = c.estado.toLowerCase()==='abierto'
+      ? '<span class="ml-2 px-2 py-0.5 rounded-full text-xs bg-green-600/20 text-green-400">Activo</span>'
+      : '<span class="ml-2 px-2 py-0.5 rounded-full text-xs bg-red-600/20 text-red-400">Finalizado</span>';
+
+    return `
+      <div class="bg-gray-700/50 rounded-xl p-4 flex justify-between items-start shadow
+                  hover:ring hover:ring-green-500/30 cursor-pointer"
+           onclick="verDetalle(${c.id_proyecto})">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <i data-feather="check-circle" class="w-5 h-5 text-green-500"></i>
+            <h3 class="text-lg font-semibold">${c.titulo}</h3>
+            ${badge}
+          </div>
+
+          <p class="text-gray-300 text-sm mb-2">${c.descripcion || 'Sin descripción'}</p>
+
+          <div class="flex flex-wrap gap-6 text-xs text-gray-400">
+            <span class="flex items-center gap-1">
+              <i data-feather="calendar" class="w-3 h-3"></i> Creado: ${creado}
+            </span>
+            <span class="flex items-center gap-1">
+              <i data-feather="clock" class="w-3 h-3"></i> Cierre: ${cierre}
+            </span>
+            ${c.organizacion ? `
+              <span class="flex items-center gap-1">
+                <i data-feather="briefcase" class="w-3 h-3"></i> ${c.organizacion}
+              </span>` : ''}
+            ${c.region ? `
+              <span class="flex items-center gap-1">
+                <i data-feather="map-pin" class="w-3 h-3"></i> ${c.region}
+              </span>` : ''}
+          </div>
+        </div>
+
+        <a href="/pdfs/${c.archivo_pdf}" download title="Descargar PDF"
+           class="shrink-0 bg-green-500 hover:bg-green-600 p-2 rounded-full">
+          <i data-feather="download" class="w-4 h-4 text-white"></i>
+        </a>
+      </div>`;
+  }
+
+  /* ——— Render listado ——— */
+  function cargarLista(){
+    const lista  = document.getElementById('listaAnteproyectos');
+    const filtro = document.getElementById('searchInput').value.toLowerCase();
+
+    const visibles = cache.filter(c=>{
+      const esEstado = estadoActual==='activos'
+                     ? c.estado.toLowerCase()==='abierto'
+                     : c.estado.toLowerCase()!=='abierto';
+      const coincide = !filtro || c.titulo.toLowerCase().includes(filtro);
+      return esEstado && coincide;
+    });
+
+    lista.innerHTML = visibles.length
+      ? visibles.map(cardHtml).join('')
+      : '<p class="text-gray-400">Sin anteproyectos.</p>';
+
+    feather.replace();
+  }
+
+  /* ——— Eventos ——— */
+  document.getElementById('searchInput').oninput = cargarLista;
+  document.getElementById('crearBtn').onclick   = () =>
+    location.href = '/Asistentes/Convocatorias/convocatorias.html';
+
+  function verDetalle(id){
+    location.href = `/Asistentes/Convocatorias/detalle-convocatoria.html?id=${id}`;
+  }
+
+  /* ——— Inicio ——— */
+  fetchAnteproyectos();
+  </script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!-- Ubicación: /FrontEnd/Convocatorias/anteproyecto.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi – Explorador de Anteproyectos</title>
+  <!-- Tailwind & Feather Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif}
+    .sidebar-label{transition:opacity .2s}
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none}
+    .tab-active{border-bottom:3px solid #34d399;color:#34d399}
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ▸ NAVBAR ------------------------------------------------------ -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img
+        id="avatar"
+        src="/Assets/avatar-placeholder.png"
+        alt="avatar"
+        class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"
+      />
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- ▸ SIDEBAR ---------------------------------------------------- -->
+    <aside
+      id="sidebar"
+      class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <!-- Botón para contraer/expandir -->
+      <button
+        id="toggleSide"
+        class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <!-- Menú de navegación -->
+      <nav class="flex flex-col gap-6 mt-6 px-6 text-sm">
+       <a href="/dashboard.html"
+           class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+
+        <a
+          href="/FrontEnd/Asistentes/Biomo/biomo.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="activity" class="w-4 h-4"></i>
+          <span class="sidebar-label">Mis Biomos</span>
+        </a>
+
+        <a
+          href="/Asistentes/Convocatorias/convocatorias.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Nuevas Convocatorias</span>
+        </a>
+
+        <a
+          href="/Asistentes\Convocatorias\anteproyectos.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="layers" class="w-4 h-4"></i>
+          <span class="sidebar-label">Explorador Convocatorias</span>
+        </a>
+<a
+          href="/Asistentes\Convocatorias\NuevoAnteproyecto.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label"> Anteproyectos </span>
+        </a>
+
+        <a
+          href="/FrontEnd/Asistentes/Convocatorias/chat.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+
+        <a
+          href="/juego.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="play-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Videojuego</span>
+        </a>
+      </nav>
+
+      <!-- Botón cerrar sesión -->
+      <button
+        id="logoutBtn"
+        class="flex items-center gap-3 hover:text-red-400 py-2 px-6 mt-6">
+        <i data-feather="log-out" class="w-4 h-4"></i>
+        <span class="sidebar-label">Cerrar sesión</span>
+      </button>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+
+    <!-- ▸ CONTENIDO -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <h1 class="text-2xl font-semibold mb-6">Explorador Convocatorias</h1>
+
+      <!-- Buscador & Crear -->
+      <form id="searchForm" class="flex flex-wrap gap-4 items-center mb-6">
+        <div class="relative flex-1 min-w-[220px]">
+          <input id="searchInput" type="text" placeholder="Nombre de la Convocatoria" class="pl-10 pr-4 py-2 rounded-lg bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 w-full" />
+          <i data-feather="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+        </div>
+        <button id="crearBtn" type="button" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm">Crear Nueva Convocatoria</button>
+      </form>
+
+      <!-- Tabs -->
+      <div class="flex gap-8 border-b border-gray-600 mb-4 text-sm">
+        <button data-tab="abiertos" class="tab tab-active pb-2">Activos</button>
+        <button data-tab="cerrados" class="tab pb-2 text-gray-300">Finalizados</button>
+      </div>
+
+      <!-- Lista -->
+      <div id="listaAnteproyectos" class="flex flex-col gap-4"></div>
+    </main>
+  </div>
+
+<script>
+feather.replace();
+
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggleSide');
+if (toggleBtn) {
+  toggleBtn.onclick = () => {
+    sidebar.classList.toggle('w-64');
+    sidebar.classList.toggle('w-16');
+    sidebar.classList.toggle('collapsed');
+    const icon = toggleBtn.querySelector('svg');
+    icon.setAttribute('data-feather', sidebar.classList.contains('collapsed') ? 'chevron-right' : 'chevron-left');
+    feather.replace();
+  };
+}
+
+// Session & Avatar
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+const token = localStorage.getItem('token');
+if (!user.id_usuario || !token) {
+  document.body.innerHTML = '<h1 class="text-center mt-20 text-3xl">Mawi</h1><p class="text-center text-gray-400">Inicia sesión.</p>';
+  throw new Error('No auth');
+}
+document.getElementById('userName').textContent = user.nombre;
+const foto = localStorage.getItem('foto_perfil') || '';
+document.getElementById('avatar').src = foto.startsWith('/') ? foto : '/' + foto;
+
+// Botones
+
+document.getElementById('logoutBtn').onclick = () => {
+  sessionStorage.clear();
+  localStorage.clear();
+  location.href = '/index.html';
+};
+document.getElementById('profileBtn').onclick = () => location.href = '/Perfil/perfil.html';
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };
+// Tabs
+let estadoActual = 'abiertos';
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(t => t.onclick = () => {
+  estadoActual = t.dataset.tab;
+  tabs.forEach(b => b.classList.toggle('tab-active', b === t));
+  tabs.forEach(b => b.classList.toggle('text-gray-300', b !== t));
+  cargarLista();
+});
+
+// API: Corrección de endpoint
+let cache = [];async function fetchAnteproyectos() {
+  try {
+    console.log('🔄 Cargando anteproyectos del usuario:', user.id_usuario);
+    
+    const r = await fetch('/api/anteproyectos', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!r.ok) {
+      throw new Error(`HTTP ${r.status}`);
+    }
+
+    const data = await r.json();
+    console.log('📋 Datos recibidos:', data);
+    console.log('👤 Usuario actual ID:', user.id_usuario);
+    
+    // ✅ AGREGAR: Filtrar solo anteproyectos del usuario actual
+    if (Array.isArray(data)) {
+      // Debug del filtro
+      data.forEach(a => {
+        console.log(`📄 Anteproyecto: ${a.titulo} - Owner: ${a.id_usuario_owner} - Usuario: ${user.id_usuario} - Match: ${a.id_usuario_owner == user.id_usuario}`);
+      });
+      
+      // Filtrar solo los del usuario actual
+      cache = data.filter(a => a.id_usuario_owner == user.id_usuario);
+    } else {
+      console.warn('⚠️ Los datos no son un array:', typeof data);
+      cache = [];
+    }
+    
+    console.log(`✅ Anteproyectos filtrados para el usuario: ${cache.length}`);
+    cargarLista();
+  } catch (err) {
+    console.error('[Error fetchAnteproyectos]', err);
+    document.getElementById('listaAnteproyectos').innerHTML = '<p class="text-red-500">No se pudo cargar la lista.</p>';
+  }
+}
+
+// Render de cards
+// ✅ MEJORAR: Render de cards con iconos de estado
+function cardHtml(a) {
+  const fechaCierre = a.fecha_cierre ? new Date(a.fecha_cierre).toLocaleDateString() : "—";
+  const fechaCreacion = new Date(a.fecha_creacion).toLocaleDateString();
+  
+  // ✅ AGREGAR: Determinar estado basado en fechas
+  const hoy = new Date();
+  const fechaCierreObj = new Date(a.fecha_cierre);
+  const estaActivo = fechaCierreObj >= hoy;
+  
+  // ✅ AGREGAR: Iconos y colores para el estado
+  const estado = estaActivo ? 'Activo' : 'Finalizado';
+  const estadoColor = estaActivo ? 'text-green-400' : 'text-red-400';
+  const estadoBg = estaActivo ? 'bg-green-900/30' : 'bg-red-900/30';
+  const icono = estaActivo ? 'check-circle' : 'x-circle';
+  
+  return `
+    <div class="bg-gray-700/50 rounded-xl p-4 flex justify-between items-center shadow-md hover:bg-gray-700/70 transition-colors cursor-pointer" onclick="verDetalle(${a.id_proyecto || a.id_anteproyecto})">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-2">
+          <!-- ✅ AGREGAR: Icono de estado -->
+          <div class="flex items-center gap-2">
+            <i data-feather="${icono}" class="w-5 h-5 ${estadoColor}"></i>
+            <h3 class="text-lg font-semibold">${a.titulo}</h3>
+          </div>
+          <!-- ✅ AGREGAR: Badge de estado -->
+          <span class="px-3 py-1 text-xs rounded-full ${estadoBg} ${estadoColor} font-medium border border-current/20">
+            ${estado}
+          </span>
+        </div>
+        <p class="text-gray-300 text-sm mb-2 max-w-md">${a.descripcion || 'Sin descripción'}</p>
+        <div class="text-xs text-gray-400 flex gap-6 flex-wrap">
+          <!-- ✅ AGREGAR: Iconos para cada dato -->
+          <span class="flex items-center gap-1">
+            <i data-feather="calendar" class="w-3 h-3"></i>
+            Creado: ${fechaCreacion}
+          </span>
+          <span class="flex items-center gap-1">
+            <i data-feather="clock" class="w-3 h-3"></i>
+            Cierre: ${fechaCierre}
+          </span>
+          ${a.organizacion ? 
+            `<span class="flex items-center gap-1">
+              <i data-feather="building" class="w-3 h-3"></i>
+              ${a.organizacion}
+            </span>` : ''
+          }
+          ${a.region ? 
+            `<span class="flex items-center gap-1">
+              <i data-feather="map-pin" class="w-3 h-3"></i>
+              ${a.region}
+            </span>` : ''
+          }
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- ✅ MEJORAR: Botón de descarga con mejor diseño -->
+        ${a.archivo_pdf ? 
+          `<a href="/pdfs/${a.archivo_pdf}" download title="Descargar PDF" 
+              class="bg-green-500 hover:bg-green-600 p-2 rounded-full transition-colors" onclick="event.stopPropagation()">
+            <i data-feather="download" class="w-4 h-4 text-white"></i>
+          </a>` : 
+          `<div class="bg-gray-600 p-2 rounded-full opacity-50" title="Sin archivo PDF">
+            <i data-feather="file-x" class="w-4 h-4 text-gray-400"></i>
+          </div>`
+        }
+      </div>
+    </div>`;
+}
+
+// Cargar cards
+// ✅ MEJORAR: Función cargarLista con filtro por fechas
+function cargarLista() {
+  const lista = document.getElementById('listaAnteproyectos');
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  
+  console.log('🔍 Filtrando lista:', { estadoActual, totalCache: cache.length, usuario: user.id_usuario });
+  
+  const filtrado = cache.filter(a => {
+    // ✅ CAMBIAR: Filtrar por fechas en lugar de por campo "estado"
+    const hoy = new Date();
+    const fechaCierreObj = new Date(a.fecha_cierre);
+    const estaActivo = fechaCierreObj >= hoy;
+    
+    const coincideEstado = estadoActual === 'abiertos' ? 
+      estaActivo : // Solo activos (fecha futura)
+      !estaActivo; // Solo finalizados (fecha pasada)
+    
+    const coincideSearch = !query || a.titulo.toLowerCase().includes(query);
+    
+    console.log('📋 Anteproyecto:', a.titulo, 'Activo:', estaActivo, 'Coincide:', coincideEstado && coincideSearch);
+    
+    return coincideEstado && coincideSearch;
+  });
+  
+  console.log('✅ Filtrados finales:', filtrado.length);
+  
+  // ✅ MEJORAR: Mensaje vacío con iconos
+  const mensajeVacio = estadoActual === 'abiertos' ? 
+    `<div class="text-center py-8">
+      <div class="text-green-400 text-6xl mb-4">
+        <i data-feather="check-circle" class="w-16 h-16 mx-auto"></i>
+      </div>
+      <p class="text-gray-400">No tienes anteproyectos activos</p>
+      <p class="text-sm text-gray-500 mt-2">Crea tu primer anteproyecto usando el botón "Crear Nueva Convocatoria"</p>
+    </div>` :
+    `<div class="text-center py-8">
+      <div class="text-red-400 text-6xl mb-4">
+        <i data-feather="x-circle" class="w-16 h-16 mx-auto"></i>
+      </div>
+      <p class="text-gray-400">No tienes anteproyectos finalizados</p>
+      <p class="text-sm text-gray-500 mt-2">Los anteproyectos vencidos aparecerán aquí</p>
+    </div>`;
+  
+  lista.innerHTML = filtrado.length ? 
+    filtrado.map(cardHtml).join('') : 
+    mensajeVacio;
+    
+  feather.replace(); // ✅ IMPORTANTE: Renderizar iconos
+}
+
+// ✅ CAMBIAR: Actualizar los nombres de tabs para mayor claridad
+// En el HTML, cambia:
+// <button data-tab="abiertos" class="tab tab-active pb-2">Abiertos</button>
+// <button data-tab="cerrados" class="tab pb-2 text-gray-300">Cerrados</button>
+// Por:
+// <button data-tab="abiertos" class="tab tab-active pb-2">Activos</button>
+// <button data-tab="cerrados" class="tab pb-2 text-gray-300">Finalizados</button>
+
+// Vista detalle
+
+function verDetalle(id) {
+location.href = `/Asistentes/Convocatorias/detalle-convocatoria.html?id=${id}`;
+}
+
+// Filtros y carga inicial
+
+document.getElementById('searchInput').oninput = cargarLista;
+document.getElementById('crearBtn').onclick = () => location.href = '/Asistentes/Convocatorias/convocatorias.html';
+fetchAnteproyectos();
+</script>
+</body>
+</html>

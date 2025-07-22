@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mawi – Biomos (Super-Admin)</title>
+
+  <!-- Tailwind + Feather -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none;transition:opacity .2s;}
+    .sidebar-label{transition:opacity .2s;}
+    .rotate-180{transform:rotate(180deg);}
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif;}
+    .card{background:#505050;border-radius:1rem;padding:1rem;width:280px;cursor:pointer;transition:background .2s;}
+    .card:hover{background:#585858;}
+    .card img{width:100%;height:180px;object-fit:cover;border-radius:.5rem;}
+    select, input{min-width:190px;}
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+  <!-- ═════════ NAVBAR ═════════ -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"></path>
+        <circle cx="12" cy="12" r="2.5"></circle>
+      </svg>
+      <span class="font-semibold text-lg">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700">
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+          </a>
+                <a href="/Asistentes\Convocatorias\convocatoriasSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Convocatorias</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/anteproyectosSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+
+        <a href="/Asistentes\Convocatorias\chatsuper.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+    <!-- ═════════ CONTENIDO ═════════ -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <h1 class="text-2xl font-semibold mb-6">Biomos – Vista Super-Admin</h1>
+
+      <!-- Filtros -->
+      <div class="flex flex-wrap gap-4 mb-6">
+        <div class="relative">
+          <input id="searchInput" type="text" placeholder="Buscar por ID, usuario, tipo o ecosistema"
+                 class="pl-10 pr-4 py-2 rounded-lg bg-gray-700 placeholder-gray-400
+                        focus:outline-none focus:ring-2 focus:ring-green-500">
+          <i data-feather="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+        </div>
+        <select id="filterSelect"
+                class="bg-gray-700 rounded-lg px-4 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-green-500">
+          <option value="">Todos los tipos</option>
+          <option value="camaras_trampa">Cámaras Trampa</option>
+          <option value="validacion_cobertura">Validación Cobertura</option>
+          <option value="fauna_busqueda_libre">Fauna Búsqueda Libre</option>
+          <option value="fauna_transecto">Fauna Transecto</option>
+          <option value="fauna_punto_conteo">Fauna Punto Conteo</option>
+          <option value="variables_climaticas">Variables Climáticas</option>
+          <option value="parcela_vegetacion">Parcela Vegetación</option>
+        </select>
+        <select id="dateSelect"
+                class="bg-gray-700 rounded-lg px-4 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-green-500">
+          <option value="all">Todas las fechas</option>
+          <option value="15">Últimos 15 días</option>
+          <option value="30">Último mes</option>
+          <option value="90">Últimos 3 meses</option>
+        </select>
+      </div>
+
+      <div id="biomos-list"
+           class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"></div>
+
+      <!-- Paginación -->
+      <div class="flex justify-center mt-6 gap-4">
+        <button id="prevPage" class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">Anterior</button>
+        <span id="pageIndicator" class="self-center text-sm text-gray-300">Página 1</span>
+        <button id="nextPage" class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">Siguiente</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ═════════ SCRIPTS ═════════ -->
+  <script>
+    /* — Feather — */
+    feather.replace();
+
+    /* Elementos DOM */
+    const sidebar      = document.getElementById('sidebar');
+    const toggleSide   = document.getElementById('toggleSide');
+    const profileBtn   = document.getElementById('profileBtn');
+    const supportBtn   = document.getElementById('supportBtn');
+    const logoutBtn    = document.getElementById('logoutBtn');
+    const userName     = document.getElementById('userName');
+    const avatar       = document.getElementById('avatar');
+    const searchInput  = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+    const dateSelect   = document.getElementById('dateSelect');
+    const prevPage     = document.getElementById('prevPage');
+    const nextPage     = document.getElementById('nextPage');
+    const pageIndicator= document.getElementById('pageIndicator');
+    const listDiv      = document.getElementById('biomos-list');
+
+    /* 1. barra lateral */
+    toggleSide.onclick = () => {
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-16');
+      sidebar.classList.toggle('collapsed');
+      toggleSide.querySelector('svg').classList.toggle('rotate-180');
+    };
+
+    /* 2. botones */
+    profileBtn.onclick = () => location.href = '/Perfil/perfilSuper.html';
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };    logoutBtn.onclick = () => { 
+      sessionStorage.clear(); 
+      localStorage.clear(); 
+      location.href = '/index.html'; 
+    };
+
+    /* 3. usuario */
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    if (userData?.nombre) userName.textContent = userData.nombre;
+    const avatarURL = localStorage.getItem('foto_perfil');
+    if (avatarURL && avatarURL !== 'null') {
+      avatar.src = avatarURL;
+      avatar.onerror = () => avatar.src = '/Assets/avatar-placeholder.png';
+    }
+
+    /* 4. token */
+    const token = localStorage.getItem('token');
+    if (!token) { 
+      document.body.innerHTML = '<h1>Acceso restringido</h1>'; 
+      setTimeout(() => location.href = '/index.html', 2000);
+      throw new Error('No auth'); 
+    }
+
+    /* 5. caché y paginación */
+    let reportesCache    = [];
+    let filteredReportes = [];
+    let currentPage      = 1;
+    const itemsPerPage   = 6;
+
+    /* 6. carga inicial (una sola petición grande) */
+    async function fetchReportes() {
+      try {
+        listDiv.innerHTML = '<p class="text-gray-400 text-center">Cargando biomos...</p>';
+        
+        // ✅ CORREGIR LA RUTA API
+        const r = await fetch('/api/admin/biomos', { 
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        });
+        
+        if (!r.ok) {
+          const errorText = await r.text();
+          throw new Error(`API ${r.status}: ${errorText}`);
+        }
+        
+        const data = await r.json();
+        // Manejar diferentes formatos de respuesta
+        reportesCache = data.rows || data.biomos || data || [];
+        applyFilters();
+      } catch (e) {
+        console.error('API error:', e);
+        listDiv.innerHTML = `<p class="text-red-400">Error: ${e.message}</p>`;
+      }
+    }
+
+    /* 7. aplicar filtros locales */
+    function applyFilters() {
+      const q   = searchInput.value.toLowerCase();
+      const typ = filterSelect.value;
+      const d   = dateSelect.value;
+      const now = new Date();
+
+      filteredReportes = reportesCache.filter(r => {
+        /* — búsqueda libre — */
+        const matchQ = !q ||
+          (r.id_biomo || r.id || '').toString().includes(q) ||
+          (r.nombre_usuario   || '').toLowerCase().includes(q) ||
+          (r.estado           || '').toLowerCase().includes(q) ||
+          (r.tipo_ecosistema  || '').toLowerCase().includes(q);
+
+        /* — tipo de reporte — */
+        const matchT = !typ || r.estado === typ;
+
+        /* — rango de fechas — */
+        let matchD = true;
+        if (d !== 'all' && r.fecha_creacion) {
+          const diff = (now - new Date(r.fecha_creacion)) / 86400000; // ms→días
+          matchD = diff <= Number(d);
+        }
+        return matchQ && matchT && matchD;
+      });
+
+      currentPage = 1;
+      renderReportes();
+    }
+
+    /* 8. renderizar (paginación local) */
+    function renderReportes() {
+      listDiv.innerHTML = '';
+      
+      if (filteredReportes.length === 0) {
+        listDiv.innerHTML = '<p class="text-gray-400 text-center col-span-full">No se encontraron biomos.</p>';
+        return;
+      }
+
+      const totalPages = Math.max(Math.ceil(filteredReportes.length / itemsPerPage), 1);
+      const start      = (currentPage - 1) * itemsPerPage;
+      const pageRows   = filteredReportes.slice(start, start + itemsPerPage);
+
+      pageRows.forEach(rep => {
+        let img;
+        try { 
+          const p = JSON.parse(rep.imagenes || '[]'); 
+          img = Array.isArray(p) ? p[0] : p; 
+        } catch { 
+          img = rep.imagenes; 
+        }
+        
+        const src = img ? `/imagesBiomos/${img}` : '/Assets/avatar-placeholder.png';
+        const reporteId = rep.id_biomo || rep.id || '0';
+        const usuarioId = rep.id_usuario || '—';
+        const fechaCreacion = rep.fecha_creacion ? 
+          new Date(rep.fecha_creacion).toLocaleDateString() : '—';
+
+        listDiv.insertAdjacentHTML('beforeend', `
+          <div class="card" onclick="location.href='reporteSuperadmin.html?id=${reporteId}'">
+            <img src="${src}" class="w-full h-44 object-cover rounded-lg" 
+                 onerror="this.src='/Assets/avatar-placeholder.png'">
+            <h3 class="text-lg font-bold mt-2">Biomo #${reporteId}</h3>
+            <p><strong>Usuario:</strong> ${rep.nombre_usuario || '—'} (ID ${usuarioId})</p>
+            <p><strong>Estado:</strong> ${rep.estado || '—'}</p>
+            <p><strong>Fecha:</strong> ${fechaCreacion}</p>
+          </div>`);
+      });
+
+      // ✅ CORREGIR TEMPLATE LITERALS
+      pageIndicator.textContent = `Página ${currentPage} de ${totalPages}`;
+      prevPage.disabled = currentPage <= 1;
+      nextPage.disabled = currentPage >= totalPages;
+    }
+
+    /* 9. eventos de interfaz */
+    searchInput.oninput = applyFilters;
+    filterSelect.onchange = applyFilters;
+    dateSelect.onchange = applyFilters;
+
+    prevPage.onclick = () => { 
+      if (currentPage > 1) { 
+        currentPage--; 
+        renderReportes(); 
+      } 
+    };
+    
+    nextPage.onclick = () => { 
+      const max = Math.ceil(filteredReportes.length / itemsPerPage);
+      if (currentPage < max) { 
+        currentPage++; 
+        renderReportes(); 
+      } 
+    };
+
+    /* 10. arranque */
+    fetchReportes();
+  </script>
+</body>
+</html>

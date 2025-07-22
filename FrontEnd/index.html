@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi – Inicio</title>
+  <link rel="stylesheet" href="/Estilos/inicio.css" />
+</head>
+<body>
+  <div class="card-container">
+    <h1 class="title">Mawi</h1>
+    <p class="subtitle">Inicia sesión o crea tu cuenta para empezar a usar Mawi y todas sus funciones.</p>
+    <a href="login.html" class="btn">Iniciar sesión</a>
+    <a href="CrearCuenta/datos-personales.html" class="btn">Crear cuenta</a>
+  </div>
+
+  <script>
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('foto_perfil');
+
+    const sesion = sessionStorage.getItem('user');
+    if (sesion) {
+      const { rol } = JSON.parse(sesion);
+      if      (rol === 'superadmin') location.href = 'dashboard.html';
+      else if (rol === 'admin')      location.href = 'admin.html';
+      else                           location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

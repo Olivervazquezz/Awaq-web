@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Solicitudes Pendientes · Mawi</title>
+
+<!-- Tailwind + Feather -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+
+<style>
+  /* oculta texto cuando la barra está colapsada */
+  .collapsed .sidebar-label{opacity:0;pointer-events:none}
+</style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+<!-- ▸ NAVBAR ------------------------------------------------------ -->
+<header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+  <div class="flex items-center gap-2">
+    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+      <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+      <circle cx="12" cy="12" r="2.5"/>
+    </svg>
+    <span class="font-semibold text-lg">Mawi</span>
+  </div>
+  <div id="profileBtn"
+       class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+    <span id="userName" class="text-sm">Usuario</span>
+    <img id="avatar" src="../../assets/avatar-placeholder.png"
+         class="w-8 h-8 rounded-full object-cover border-2 border-gray-700">
+  </div>
+</header>
+
+<div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+          </a>
+                <a href="/Asistentes\Convocatorias\convocatoriasSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Convocatorias</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/anteproyectosSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+
+        <a href="/Asistentes\Convocatorias\chatsuper.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+  <!-- ▸ CONTENIDO -------------------------------------------------- -->
+  <main class="flex-1 overflow-y-auto p-6">
+
+    <h2 class="text-2xl font-semibold mb-4 flex items-center gap-2">
+      <i data-feather="clock" class="w-6 h-6 text-green-500"></i>
+      Solicitudes Pendientes
+    </h2>
+
+    <div class="overflow-x-auto bg-gray-800 rounded-lg shadow">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-700 text-left">
+          <tr>
+            <th class="py-3 px-4">Nombre</th>
+            <th class="py-3 px-4">Email</th>
+            <th class="py-3 px-4">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="pend" class="divide-y divide-gray-700"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ▸ JS ----------------------------------------------------------- -->
+<script>
+feather.replace();
+
+/* sidebar toggle */
+const sb   = document.getElementById('sidebar');
+const tgl  = document.getElementById('toggleSide');
+const ico  = tgl.querySelector('svg');
+tgl.onclick = ()=>{
+  sb.classList.toggle('w-64');
+  sb.classList.toggle('w-16');
+  sb.classList.toggle('collapsed');
+  ico.classList.toggle('rotate-180');
+};
+
+/* datos usuario */
+const u   = JSON.parse(localStorage.getItem('user')||'{}');
+const ava = localStorage.getItem('foto_perfil');
+if(u?.nombre) document.getElementById('userName').textContent = u.nombre;
+if(ava)       document.getElementById('avatar').src = ava;
+
+/* logout / soporte / perfil */
+logoutBtn.onclick  = ()=>{ sessionStorage.clear(); localStorage.clear();
+                           location.href='../../index.html'; };
+profileBtn.onclick = ()=>location.href='../../Perfil/perfilSuper.html';
+
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };
+
+/* -------- lógica pendientes -------- */
+const token = localStorage.getItem('token');
+
+function load(){
+  fetch('/api/super/pending',
+        {headers:{Authorization:'Bearer '+token}})
+  .then(r=>r.json()).then(render)
+  .catch(()=>alert('Error al cargar pendientes'));
+}
+function render(arr){
+  pend.innerHTML = arr.map(u=>`
+    <tr class="hover:bg-gray-700">
+      <td class="py-2 px-4">${u.nombre}</td>
+      <td class="py-2 px-4">${u.email}</td>
+      <td class="py-2 px-4 flex gap-2">
+        <button onclick="approve(${u.id_usuario})"
+                class="bg-green-700 hover:bg-green-800 text-xs px-3 py-1 rounded">
+          Aprobar
+        </button>
+        <button onclick="reject(${u.id_usuario})"
+                class="bg-red-700 hover:bg-red-800 text-xs px-3 py-1 rounded">
+          Rechazar
+        </button>
+      </td>
+    </tr>`).join('');
+}
+function approve(id){
+  fetch('/api/super/pending/'+id+'/approve',{
+    method:'PATCH',headers:{Authorization:'Bearer '+token}
+  }).then(load).catch(()=>alert('Error al aprobar'));
+}
+function reject(id){
+  if(!confirm('¿Rechazar / eliminar solicitud?'))return;
+  fetch('/api/super/users/'+id,{method:'DELETE',
+        headers:{Authorization:'Bearer '+token}})
+  .then(load).catch(()=>alert('Error al rechazar'));
+}
+load();
+</script>
+</body>
+</html>

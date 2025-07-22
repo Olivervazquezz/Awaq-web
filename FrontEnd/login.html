@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - Iniciar sesión</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+<body>
+  <div class="card-container">
+    <h2 class="title">Iniciar sesión</h2>
+    <p class="register-link">
+      <a href="CrearCuenta/datos-personales.html">
+        ¿No tienes cuenta? Crea una nueva
+      </a>
+    </p>
+
+    <form class="login-form" id="loginForm">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" placeholder="Escribe..." required />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="Escribe..." required />
+
+      <a href="recuperarContraseña/recuperar.html" class="forgot-password">¿Has olvidado tu contraseña?</a>
+
+      <button type="submit" class="btn-green">Iniciar sesión</button>
+    </form>
+
+    <p class="support-link">
+      <a href="#" onclick="toggleSoporte()">¿Necesitas ayuda? Contacta con nosotros</a>
+    </p>
+  </div>
+  <!-- Contenedor del modal -->
+<div id="overlaySoporte" class="overlay"></div>
+  <script>
+  // Manejo del envío del formulario de login
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    try {
+      const res = await fetch('http://localhost:3000/api/auth/login', {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+      if (!res.ok) return alert(data.error);
+
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
+      window.location.href = data.redirect;
+    } catch (err) {
+      console.error(err);
+      alert('Error al conectar con el servidor');
+    }
+  });
+
+  // Mostrar/ocultar tarjeta de soporte
+  const toggleSoporte = async () => {
+    const overlay = document.getElementById('overlaySoporte');
+
+    if (overlay.classList.contains('visible')) {
+      overlay.classList.remove('visible');
+      overlay.innerHTML = '';
+      return;
+    }
+
+    const res = await fetch('/Soporte/soporte.html');
+    const html = await res.text();
+    overlay.innerHTML = html;
+    overlay.classList.add('visible');
+  };
+
+  // Función global para cerrar soporte (desde dentro del soporte.html)
+  function cerrarSoporte() {
+    const overlay = document.getElementById('overlaySoporte');
+    overlay.classList.remove('visible');
+    overlay.innerHTML = '';
+  };
+</script>
+</body>
+</html>

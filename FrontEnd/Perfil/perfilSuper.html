@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil – EcoRanger</title>
+
+  <!-- Tailwind + Feather Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- Tu CSS personalizado para perfil -->
+  <link rel="stylesheet" href="/Estilos/perfil.css" />
+
+  <style>
+    /* Clase auxiliar para rotar la flecha al colapsar */
+    .rotate-180 {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- NAVBAR -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"/>
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+      </button>
+
+      <nav class="flex flex-col gap-4 mt-6 px-6 text-sm">
+        <a href="/super-Admin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+        <a href="/Asistentes/Biomo/biomoSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Biomos</span>
+        </a>
+          </a>
+                <a href="/Asistentes\Convocatorias\convocatoriasSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Convocatorias</span>
+        </a>
+        <a href="/Asistentes/Convocatorias/anteproyectosSuperadmin.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Número de Anteproyectos</span>
+
+        <a href="/Asistentes\Convocatorias\chatsuper.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+        <a href="/Views/super/users.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="users" class="w-4 h-4"></i>
+          <span class="sidebar-label">Gestión de Usuarios</span>
+        </a>
+        <a href="/Views/super/pending.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="clock" class="w-4 h-4"></i>
+          <span class="sidebar-label">Solicitudes Pendientes</span>
+        </a>
+        <button id="logoutBtn"
+                class="flex items-center gap-3 hover:text-red-400 py-2 mt-4">
+          <i data-feather="log-out" class="w-4 h-4"></i>
+          <span class="sidebar-label">Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+
+    <!-- ─── CONTENIDO DE PERFIL ─── -->
+    <main class="flex-1 overflow-y-auto flex justify-center">
+      <div class="perfil-card">
+        <h2 class="text-2xl font-semibold text-center">EcoRanger “<span id="displayName"></span>”</h2>
+
+        <!-- Imagen de perfil y botón debajo -->
+        <div class="foto-perfil-wrapper">
+          <div class="foto-perfil" id="currentPhoto">
+            <!-- Aquí insertaremos la etiqueta <img> si hay foto existente, o un “+” en caso contrario -->
+            <!-- Por defecto mostramos un “+” (Placeholder) -->
+            <span class="text-4xl text-gray-600">+</span>
+          </div>
+          
+        </div>
+
+        <!-- Formulario de perfil -->
+        <form id="profileForm" class="w-full flex flex-col gap-2">
+          <label for="nombre" class="font-semibold text-sm">Nombre</label>
+          <input
+            id="nombre"
+            name="nombre"
+            type="text"
+            placeholder="Tu nombre"
+            class="bg-transparent border-b border-gray-600 text-white px-1 py-1"
+            disabled
+          />
+
+          <label for="apellidos" class="font-semibold text-sm">Apellidos</label>
+          <input
+            id="apellidos"
+            name="apellidos"
+            type="text"
+            placeholder="Tus apellidos"
+            class="bg-transparent border-b border-gray-600 text-white px-1 py-1"
+            disabled
+          />
+
+          <label for="organizacion" class="font-semibold text-sm">Organización</label>
+          <input
+            id="organizacion"
+            name="organizacion"
+            type="text"
+            placeholder="Nombre de tu organización"
+            class="bg-transparent border-b border-gray-600 text-white px-1 py-1"
+            disabled
+          />
+
+          <label for="descripcion_organizacion" class="font-semibold text-sm"
+            >Descripción organización</label
+          >
+          <input
+            id="descripcion_organizacion"
+            name="descripcion_organizacion"
+            type="text"
+            placeholder="Breve descripción"
+            class="bg-transparent border-b border-gray-600 text-white px-1 py-1"
+            disabled
+          />
+
+          <!-- Campo file oculto -->
+          <input
+            type="file"
+            id="inputFoto"
+            name="foto"
+            accept="image/*"
+            class="hidden"
+          />
+
+          <!-- Botones “Editar” y “Guardar | Cancelar” -->
+          <div class="flex gap-4 justify-end mt-4">
+            <button
+              type="button"
+              id="btnEditar"
+              class="bg-green-600 hover:bg-green-700 px-4 py-1 rounded text-sm font-medium"
+            >
+              <i data-feather="edit" class="w-4 h-4 inline-block"></i>
+              Editar
+            </button>
+            <button
+              type="submit"
+              id="btnGuardar"
+              class="bg-blue-600 hover:bg-blue-700 px-4 py-1 rounded text-sm font-medium hidden"
+            >
+              <i data-feather="save" class="w-4 h-4 inline-block"></i>
+              Guardar
+            </button>
+            <button
+              type="button"
+              id="btnCancelar"
+              class="bg-red-600 hover:bg-red-700 px-4 py-1 rounded text-sm font-medium hidden"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+
+        <!-- Botón “Cambiar contraseña”-->
+        <a
+          href="/Perfil/perfil-cambiarcontraseña.html"
+          class="btn-cambiar-pass mt-4"
+          title="Cambiar contraseña"
+        >
+          <i data-feather="lock" class="w-4 h-4"></i>
+          Cambiar contraseña
+        </a>
+
+  <!-- ─── JS PARA PERFIL ─── -->
+  <script>
+    feather.replace();
+
+    /*───────────────────────────────────*
+     * 1) Contraer / expandir la sidebar *
+     *───────────────────────────────────*/
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSide');
+    const arrow = toggleBtn.querySelector('svg');
+    toggleBtn.onclick = () => {
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-16');
+      sidebar.classList.toggle('collapsed');
+      arrow.classList.toggle('rotate-180');
+    };
+
+    /*───────────────────────────────────*
+     * 2) Cargar datos del usuario      *
+     *    (GET /api/users/me)            *
+     *───────────────────────────────────*/
+    const token = localStorage.getItem('token') || '';
+    async function cargarDatosPerfil() {
+      try {
+        const resp = await fetch('/api/users/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!resp.ok) {
+          throw new Error('Error al obtener perfil');
+        }
+        const u = await resp.json();
+        // Rellenamos el nombre que sale en título
+        document.getElementById('displayName').textContent = u.nombre;
+
+        // Rellenamos inputs
+        document.getElementById('nombre').value = u.nombre || '';
+        document.getElementById('apellidos').value = u.apellidos || '';
+        document.getElementById('organizacion').value = u.organizacion || '';
+        document.getElementById('descripcion_organizacion').value =
+          u.descripcion_organizacion || '';
+
+        // Mostramos la foto actual (o placeholder)
+        const contPhoto = document.getElementById('currentPhoto');
+        contPhoto.innerHTML = ''; // limpiamos el “+”
+        if (u.foto_perfil) {
+          // Asegurarnos de que empiece con “/”
+          let rutaFoto = u.foto_perfil;
+          if (!rutaFoto.startsWith('/')) rutaFoto = '/' + rutaFoto;
+          // Creamos <img> dentro de #currentPhoto
+          const img = document.createElement('img');
+          img.src = rutaFoto;
+          img.alt = 'Foto de perfil';
+          img.className = 'w-24 h-24 object-cover rounded-full border-2 border-gray-700';
+          contPhoto.appendChild(img);
+
+          // Guardamos en localStorage para el nav
+          localStorage.setItem('foto_perfil', rutaFoto);
+        } else {
+          // No tiene foto: dejamos el “+” tal cual ya estaba
+          contPhoto.innerHTML = '<span class="text-4xl text-gray-600">+</span>';
+          localStorage.removeItem('foto_perfil');
+        }
+
+        // Actualicemos nav‐bar (avatar y userName)
+        if (u.nombre) {
+          document.getElementById('userName').textContent = u.nombre;
+        }
+        const avatarImg = document.getElementById('avatar');
+        if (u.foto_perfil) {
+          let rutaFoto = u.foto_perfil;
+          if (!rutaFoto.startsWith('/')) rutaFoto = '/' + rutaFoto;
+          avatarImg.src = rutaFoto;
+        } else {
+          avatarImg.src = '/Assets/avatar-placeholder.png';
+        }
+      } catch (err) {
+        console.error(err);
+        alert('No se pudieron cargar los datos de perfil');
+      }
+    }
+
+    // Ejecutamos carga inicial:
+    cargarDatosPerfil();
+
+
+    /*───────────────────────────────────*
+     * 3) Botones “Editar”, “Guardar”, “Cancelar” *
+     *───────────────────────────────────*/
+    const btnEditar = document.getElementById('btnEditar');
+    const btnGuardar = document.getElementById('btnGuardar');
+    const btnCancelar = document.getElementById('btnCancelar');
+    const inputs = [
+      'nombre',
+      'apellidos',
+      'organizacion',
+      'descripcion_organizacion'
+      // Omitimos “contraseña” porque la cambiamos en otra pantalla
+    ];
+    const inputFoto = document.getElementById('inputFoto');
+
+    btnEditar.addEventListener('click', () => {
+      // Quitamos disabled de los inputs
+      inputs.forEach((id) => {
+        document.getElementById(id).disabled = false;
+      });
+      // Habilitamos la posibilidad de cambiar foto al hacer click en la caja de foto
+      document.getElementById('currentPhoto').style.cursor = 'pointer';
+      // Mostramos botones Guardar y Cancelar, ocultamos Editar
+      btnEditar.classList.add('hidden');
+      btnGuardar.classList.remove('hidden');
+      btnCancelar.classList.remove('hidden');
+    });
+
+    btnCancelar.addEventListener('click', () => {
+      // Volvemos a dejar todo “disabled”
+      inputs.forEach((id) => {
+        document.getElementById(id).disabled = true;
+      });
+      document.getElementById('currentPhoto').style.cursor = 'default';
+      // Ocultamos Guardar/Cancelar, volvemos a mostrar Editar
+      btnEditar.classList.remove('hidden');
+      btnGuardar.classList.add('hidden');
+      btnCancelar.classList.add('hidden');
+      // Revertimos los valores en inputs a los que recargamos del servidor
+      cargarDatosPerfil();
+    });
+
+    // Al hacer clic en la zona de la foto (solo si está ‘editable’):
+    document.getElementById('currentPhoto').addEventListener('click', () => {
+      // Si ya está en modo edición, sí abrimos el diálogo file
+      if (!btnEditar.classList.contains('hidden')) {
+        // Aún no hemos pinchado “Editar”
+        return;
+      }
+      inputFoto.click();
+    });
+
+    // Si el usuario selecciona un nuevo archivo, podemos mostrar un preview inmediato
+    inputFoto.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const contPhoto = document.getElementById('currentPhoto');
+        contPhoto.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = reader.result;
+        img.alt = 'Foto de perfil (preview)';
+        img.className = 'w-24 h-24 object-cover rounded-full border-2 border-gray-700';
+        contPhoto.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+
+
+    /*───────────────────────────────────*
+     * 4) Al hacer “Guardar” → PUT /api/users/profile *
+     *───────────────────────────────────*/
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const formEl = document.getElementById('profileForm');
+        const formData = new FormData();
+
+        // Solo agregamos a FormData los inputs habilitados (es decir, si user los editó)
+        inputs.forEach((id) => {
+          const val = document.getElementById(id).value.trim();
+          if (val !== '') {
+            formData.append(id, val);
+          }
+        });
+
+        // Si seleccionó archivo de foto
+        if (inputFoto.files.length > 0) {
+          formData.append('foto', inputFoto.files[0]);
+        }
+
+        const resp = await fetch('/api/users/profile', {
+          method: 'PUT',
+          headers: {
+            Authorization: 'Bearer ' + token
+            // NOTA: ¡no ponemos Content-Type! (el navegador lo calcula solo para FormData)
+          },
+          body: formData
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.error || 'Error al guardar perfil');
+        }
+
+        // Si todo OK, volvemos a “modo lectura”:
+        inputs.forEach((id) => {
+          document.getElementById(id).disabled = true;
+        });
+        document.getElementById('currentPhoto').style.cursor = 'default';
+        btnEditar.classList.remove('hidden');
+        btnGuardar.classList.add('hidden');
+        btnCancelar.classList.add('hidden');
+
+        // Actualizamos localStorage con la nueva foto (si devolvimos user.foto_perfil)
+        if (data.user.foto_perfil) {
+          let rutaFoto = data.user.foto_perfil;
+          if (!rutaFoto.startsWith('/')) rutaFoto = '/' + rutaFoto;
+          localStorage.setItem('foto_perfil', rutaFoto);
+        }
+
+        // Recargamos el perfil para que quede todo fresquito
+        cargarDatosPerfil();
+        alert('Perfil guardado exitosamente');
+      } catch (err) {
+        console.error(err);
+        alert(err.message);
+      }
+    });
+
+
+    /*───────────────────────────────────*
+     * 5) Botón Cerrar sesión            *
+     *───────────────────────────────────*/
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      sessionStorage.clear();
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('foto_perfil');
+      location.href = '/index.html';
+    });
+
+    /*───────────────────────────────────*
+     * 6) Botones Soporte y Perfil       *
+     *───────────────────────────────────*/
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };
+
+    document.getElementById('profileBtn').addEventListener('click', () => {
+      location.href = '/Perfil/perfil.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+.dashboard {
+  color: white;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #3b3b3b;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background-color: #3b3b3b;
+  border-radius: 15px;
+  padding: 1.5rem;
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: #bbbbbb;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card-chart {
+  width: 120px;
+  height: 120px;
+  background: conic-gradient(#1db954 0% 60%, #2e2e2e 60% 100%);
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.view-report {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.heatmap-section {
+  background-color: #2e2e2e;
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.heatmap-title {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+}
+
+.heatmap-map {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.heatmap-map img {
+  max-width: 100%;
+  height: auto;
+}
+
+.chat-input {
+  display: flex;
+  margin-top: 1.5rem;
+  background-color: #3e3e3e;
+  border-radius: 12px;
+  padding: 0.3rem;
+  align-items: center;
+}
+
+.chat-input input {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  color: white;
+  outline: none;
+}
+
+.chat-input button {
+  background-color: #1db954;
+  border: none;
+  border-radius: 50%;
+  padding: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

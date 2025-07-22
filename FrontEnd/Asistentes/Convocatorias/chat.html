@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi – Chatbot</title>
+
+  <!-- Tailwind + Feather -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    body{background:#353535;color:#fff;font-family:Inter,system-ui,sans-serif;}
+    #sidebar.collapsed .sidebar-label{opacity:0;pointer-events:none;transition:opacity .2s;}
+    .sidebar-label{transition:opacity .2s;}
+    .rotate-180{transform:rotate(180deg);}
+  </style>
+</head>
+<body class="min-h-screen flex flex-col" style="background:#353535;">
+
+  <!-- NAVBAR -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png" alt="avatar"
+           class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"/>
+    </div>
+  </header>
+
+  <div class="flex flex-grow overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+      <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+        <i data-feather="chevron-left" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <nav class="flex flex-col gap-6 mt-6 px-6 text-sm">
+        <a href="/dashboard.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="home" class="w-4 h-4"></i>
+          <span class="sidebar-label">Inicio</span>
+        </a>
+
+        <a href="/Asistentes/Biomo/biomo.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="activity" class="w-4 h-4"></i>
+          <span class="sidebar-label">Mis Biomos</span>
+        </a>
+
+        <a href="/Asistentes/Convocatorias/convocatorias.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="file-text" class="w-4 h-4"></i>
+          <span class="sidebar-label">Nuevas Convocatorias</span>
+        </a>
+
+        <a href="/Asistentes/Convocatorias/anteproyectos.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="layers" class="w-4 h-4"></i>
+          <span class="sidebar-label">Explorador Convocatorias</span>
+        </a>
+<a
+          href="/Asistentes\Convocatorias\NuevoAnteproyecto.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label"> Anteproyectos </span>
+        </a>
+
+        <a href="/Asistentes/Convocatorias/chat.html" class="flex items-center gap-3 hover:text-green-400 py-2 text-green-400">
+          <i data-feather="message-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Chatbot</span>
+        </a>
+
+        <a href="/juego.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="play-circle" class="w-4 h-4"></i>
+          <span class="sidebar-label">Videojuego</span>
+        </a>
+      </nav>
+
+      <button id="logoutBtn" class="flex items-center gap-3 hover:text-red-400 py-2 px-6 mt-6">
+        <i data-feather="log-out" class="w-4 h-4"></i>
+        <span class="sidebar-label">Cerrar sesión</span>
+      </button>
+
+      <!-- Botón Soporte -->
+      <button
+        id="supportBtn"
+        class="mt-auto m-4 flex items-center gap-2 bg-gray-800 rounded px-4 py-2 hover:ring-2 hover:ring-green-500">
+        <i data-feather="phone" class="w-4 h-4 text-green-500"></i>
+        <span class="text-sm sidebar-label">Soporte</span>
+      </button>
+    </aside>
+<iframe id="supportIframe" src="/Soporte\soporte.html" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%; border: none; background-color: #202020; color: white; padding: 20px; border-radius: 40px 40px 0 0;" ></iframe>
+
+    <!-- CONTENIDO -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <h1 class="text-2xl font-semibold mb-6 text-white">Chatbot AWAQ – Asistente Virtual</h1>
+
+      <div class="max-w-4xl mx-auto">
+        <div id="chatbot" class="text-white p-6 rounded-xl shadow-lg border" 
+             style="background:#2e2e2e; border-color:#4a4a4a;">
+          
+          <div class="flex items-center justify-center mb-6">
+            <img src="https://em-content.zobj.net/source/twitter/376/turtle_1f422.png" 
+                 alt="AWAQ Assistant" class="w-16 h-16 mr-4">
+            <div>
+              <h2 class="text-2xl font-bold">AWAQ ChatBot 🐢</h2>
+              <p class="text-gray-400 text-sm">Tu asistente virtual para consultas ambientales</p>
+            </div>
+          </div>
+          
+          <div id="chatWindow" 
+               class="h-[500px] overflow-y-auto p-4 rounded-lg mb-4 border text-base space-y-3 scrollbar-thin scrollbar-thumb-gray-600"
+               style="background:#1a1a1a; border-color:#4a4a4a;">
+            <div class="flex items-start gap-3">
+              <img src="https://em-content.zobj.net/source/twitter/376/turtle_1f422.png" 
+                   alt="bot" class="w-8 h-8 flex-shrink-0 mt-1">
+              <div class="p-3 rounded-lg rounded-tl-none max-w-xs" style="background:#2a2a2a;">
+                <strong>AWAQ Assistant:</strong> ¡Hola! Soy tu asistente virtual especializado en temas ambientales. ¿En qué puedo ayudarte hoy?
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex gap-3">
+            <input id="chatInput" 
+                   type="text" 
+                   placeholder="Escribe tu pregunta sobre medio ambiente, biodiversidad, proyectos..." 
+                   class="flex-grow p-3 rounded-lg border text-white placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+                   style="background:#3a3a3a; border-color:#555;"/>
+            <button id="sendBtn" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center gap-2">
+              <i data-feather="send" class="w-4 h-4"></i>
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+feather.replace();
+
+/* 1. Sidebar */
+const sidebar = document.getElementById('sidebar');
+const toggleSide = document.getElementById('toggleSide');
+toggleSide.onclick = function () {
+  sidebar.classList.toggle('w-64');
+  sidebar.classList.toggle('w-16');
+  sidebar.classList.toggle('collapsed');
+  this.querySelector('svg')?.classList.toggle('rotate-180');
+};
+
+/* 2. Navegación */
+const profileBtn = document.getElementById('profileBtn');
+const supportBtn = document.getElementById('supportBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+
+profileBtn.onclick = () => location.href = '/Perfil/perfil.html';
+    // Mostrar el iframe de soporte
+  document.getElementById('supportBtn').onclick = function() {
+    document.getElementById('supportIframe').style.display = 'block';
+  };
+  logoutBtn.onclick = () => { 
+  sessionStorage.clear(); 
+  localStorage.clear(); 
+  location.href = '/index.html'; 
+};
+
+/* 3. Usuario */
+const userData = JSON.parse(localStorage.getItem('user') || '{}');
+if (userData?.nombre) document.getElementById('userName').textContent = userData.nombre;
+
+const avatarURL = localStorage.getItem('foto_perfil');
+if (avatarURL && avatarURL !== 'null') {
+  const avatar = document.getElementById('avatar');
+  avatar.src = avatarURL.startsWith('/') ? avatarURL : '/' + avatarURL;
+  avatar.onerror = () => avatar.src = '/Assets/avatar-placeholder.png';
+}
+
+/* 4. Chatbot */
+const chatWindow = document.getElementById('chatWindow');
+const chatInput = document.getElementById('chatInput');
+
+async function enviarMensaje() {
+  const texto = chatInput.value.trim();
+  if (!texto) return;
+
+  // Mensaje del usuario
+  chatWindow.insertAdjacentHTML('beforeend', `
+    <div class="flex items-start gap-3 justify-end">
+      <div class="bg-green-600 p-3 rounded-lg rounded-tr-none max-w-xs text-right">
+        <strong>Tú:</strong> ${texto}
+      </div>
+      <img src="${document.getElementById('avatar').src}" 
+           alt="user" class="w-8 h-8 flex-shrink-0 mt-1 rounded-full">
+    </div>`);
+  
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  chatInput.value = '';
+
+  // Indicador de escritura
+  const typingId = 'typing-' + Date.now();
+  chatWindow.insertAdjacentHTML('beforeend', `
+    <div id="${typingId}" class="flex items-start gap-3">
+      <img src="https://em-content.zobj.net/source/twitter/376/turtle_1f422.png" 
+           alt="bot" class="w-8 h-8 flex-shrink-0 mt-1">
+      <div class="p-3 rounded-lg rounded-tl-none" style="background:#2a2a2a;">
+        <span class="animate-pulse">AWAQ está escribiendo...</span>
+      </div>
+    </div>`);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: 'Eres AWAQ, un asistente especializado en medio ambiente, biodiversidad y proyectos ambientales. Responde de manera amigable y profesional.' },
+          { role: 'user', content: texto }
+        ]
+      })
+    });
+    
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content || '⚠️ No hubo respuesta del servidor.';
+    
+    // Remover indicador de escritura
+    document.getElementById(typingId)?.remove();
+    
+    // Respuesta del bot
+    chatWindow.insertAdjacentHTML('beforeend', `
+      <div class="flex items-start gap-3">
+        <img src="https://em-content.zobj.net/source/twitter/376/turtle_1f422.png" 
+             alt="bot" class="w-8 h-8 flex-shrink-0 mt-1">
+        <div class="p-3 rounded-lg rounded-tl-none max-w-lg" style="background:#2a2a2a;">
+          <strong>AWAQ Assistant:</strong> ${reply}
+        </div>
+      </div>`);
+    
+  } catch (error) {
+    document.getElementById(typingId)?.remove();
+    chatWindow.insertAdjacentHTML('beforeend', `
+      <div class="flex items-start gap-3">
+        <img src="https://em-content.zobj.net/source/twitter/376/turtle_1f422.png" 
+             alt="bot" class="w-8 h-8 flex-shrink-0 mt-1">
+        <div class="bg-red-600 p-3 rounded-lg rounded-tl-none max-w-xs">
+          ⚠️ Error al conectar con el servidor. Intenta nuevamente.
+        </div>
+      </div>`);
+  }
+  
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+document.getElementById('sendBtn').onclick = enviarMensaje;
+chatInput.addEventListener('keydown', e => { 
+  if (e.key === 'Enter') enviarMensaje(); 
+});
+
+// Auto-focus en el input
+chatInput.focus();
+</script>
+</body>
+</html>

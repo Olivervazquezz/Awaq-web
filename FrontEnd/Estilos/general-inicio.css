@@ -1,0 +1,277 @@
+/* =========================================================
+   MAWI – ESTILOS GENERALES
+   ========================================================= */
+
+/* --------------------------- */
+/* 1. Layout básico y tipografía */
+/* --------------------------- */
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #353535;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  height: 100vh;
+}
+
+/* --------------------------- */
+/* 2. Contenedor principal */
+/* --------------------------- */
+
+.card-container {
+  background-color: #505050;
+  padding: 20px 20px;
+  width: 380px;
+  text-align: center;
+  border-radius: 16px;
+}
+
+/* --------------------------- */
+/* 3. Encabezados y textos */
+/* --------------------------- */
+
+.title {
+  font-size: 24px;
+  margin-top: 22px;
+  margin-bottom: 22px;
+}
+
+.recuperar .tittle {
+  font-size: 22px;
+  margin-top: 22px;
+  margin-bottom: 22px;
+}
+
+.subtitle {
+  font-size: 12px;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  color: #cccccc;
+}
+
+.recuperar .subtitle {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* --------------------------- */
+/* 4. Enlaces de registro y soporte */
+/* --------------------------- */
+
+.register-link {
+  font-size: 13.5px;
+  margin-top: -15px;
+}
+
+.register-link a {
+  text-decoration: none;
+  color: #88cd84;
+}
+
+.support-link {
+  font-size: 10px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.support-link a {
+  color: #f0f0f0;
+}
+
+/* --------------------------- */
+/* 5. Formularios */
+/* --------------------------- */
+
+.login-form {
+  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+  flex-direction: column;
+}
+
+.login-form label {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.login-form input,
+.login-form textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #656565;
+  color: #ffffff;
+  font-size: 11px;
+}
+
+.login-form input::placeholder,
+.login-form textarea::placeholder {
+  color: #cccccc;
+  font-size: 10px;
+}
+
+.login-form textarea {
+  resize: none;
+  font-family: Arial, sans-serif;
+  height: 50px;
+}
+
+/* --------------------------- */
+/* 6. Botones */
+/* --------------------------- */
+
+.btn-green {
+  display: block;
+  margin: 0 auto;
+  background-color: #22782c;
+  color: #f0f0f0;
+  padding: 12px;
+  width: 40%;
+  text-align: center;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-green:hover {
+  background-color: #153d1b;
+}
+
+.btn-secondary {
+  display: block;
+  margin: 10px auto 0;
+  background-color: transparent;
+  color: #cccccc;
+  border: 1.5px solid #cccccc;
+  padding: 12px;
+  width: 40%;
+  text-align: center;
+  border-radius: 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #555555;
+  color: #f0f0f0;
+}
+
+.recuperar .btn-green {
+  margin-top: 14px;
+}
+
+/* --------------------------- */
+/* 7. Contenedor de carga de archivos para .recuperar */
+/* --------------------------- */
+
+.recuperar .upload-container {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.recuperar .upload-container.highlight {
+  border-color: #88cd84;
+  background-color: transparent;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-name {
+  font-size: 12px;
+  color: #cccccc;
+  margin-bottom: 14px;
+}
+
+/* --------------------------- */
+/* 8. Imagen de vista previa solo en .recuperar */
+/* --------------------------- */
+
+.recuperar .preview-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 10px auto;
+  display: none;
+}
+
+.recuperar .preview-img.visible {
+  display: block;
+}
+
+/* --------------------------- */
+/* 9. Overlay de mensajes */
+/* --------------------------- */
+
+.overlay {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  right: 0;
+  background-color: #202020;
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+  color: #ffffff;
+  transition: bottom 0.4s ease;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.overlay.visible {
+  bottom: 0;
+}
+
+/* --------------------------- */
+/* 10. Mensajes */
+/* --------------------------- */
+
+.mensaje {
+  font-family: sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* --------------------------- */
+/* 11. Estilo del enlace "¿Has olvidado tu contraseña?" */
+/* --------------------------- */
+
+.forgot-password {
+  font-size: 10px;
+  color: #88cd84;
+  text-decoration: underline;
+  text-align: left;
+  margin-top: -3px;
+  margin-bottom: 20px;
+}
+
+.forgot-password a {
+  color: #88cd84;
+  text-decoration: underline;
+}
+
+.forgot-password a:visited {
+  color: #88cd84;
+}
+
+.forgot-password a:hover {
+  color: #66b766;
+}

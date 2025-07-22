@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi - Cambio de contraseña</title>
+  <link rel="stylesheet" href="/Estilos/general-inicio.css" />
+</head>
+<body class="recuperar">
+  <div class="card-container recuperar-card">
+    <h2 class="tittle">Cambio de contraseña</h2>
+
+    <form id="changeForm" class="login-form">
+      <!-- Campo oculto para el token -->
+      <input type="hidden" id="token" />
+
+      <label for="new-password">Nueva contraseña</label>
+      <input type="password" id="new-password" placeholder="Escribe..." required />
+
+      <label for="confirm-password">Confirmar nueva contraseña</label>
+      <input type="password" id="confirm-password" placeholder="Escribe..." required />
+
+      <button type="submit" class="btn-green">Guardar</button>
+    </form>
+
+    <p class="support-link"><a href="#">¿Necesitas ayuda? Contacta con nosotros</a></p>
+  </div>
+
+  <script>
+    // Capturar el token de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      document.getElementById('token').value = token;
+    } else {
+      alert("Token no válido o expirado.");
+      window.location.href = "index.html";
+    }
+
+    document.getElementById('changeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const token = document.getElementById('token').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (newPassword !== confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, nuevaContraseña: newPassword })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message);
+          // 🔁 Redirección actualizada:
+          window.location.href = 'confirmacion-contraseña.html';
+        } else {
+          alert(data.error);
+        }
+      } catch (err) {
+        console.error('Error al cambiar la contraseña:', err);
+        alert('Error al cambiar la contraseña');
+      }
+    });
+  </script>
+</body>
+</html>

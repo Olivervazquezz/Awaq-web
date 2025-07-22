@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawi – Detalle de Convocatoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body { background: #353535; color: #fff; font-family: Inter, system-ui, sans-serif; }
+    .sidebar-label { transition: opacity 0.2s; }
+    #sidebar.collapsed .sidebar-label { opacity: 0; pointer-events: none; }
+    iframe { width: 100%; height: 500px; border: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- ▸ NAVBAR ------------------------------------------------------ -->
+  <header class="bg-gray-800 flex items-center justify-between h-14 px-6">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+        <circle cx="12" cy="12" r="2.5"/>
+      </svg>
+      <span class="font-semibold text-lg text-white">Mawi</span>
+    </div>
+    <div id="profileBtn" class="flex items-center gap-2 cursor-pointer hover:opacity-80">
+      <span id="userName" class="text-sm text-white">Usuario</span>
+      <img id="avatar" src="/Assets/avatar-placeholder.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-700" />
+    </div>
+  </header>
+
+<!-- ▸ SIDEBAR ---------------------------------------------------- -->
+<div class="flex flex-grow overflow-hidden">
+  <aside id="sidebar" class="bg-gray-900 w-64 flex flex-col transition-all duration-200">
+    <!-- Botón para contraer/expandir -->
+    <button id="toggleSide" class="self-end mt-3 mr-2 p-1 rounded hover:bg-gray-700">
+      <i data-feather="chevron-left" class="w-4 h-4 text-gray-300"></i>
+    </button>
+    <!-- Menú de navegación -->
+    <nav class="flex flex-col gap-6 mt-6 px-6 text-sm">
+      <a href="/dashboard.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+        <i data-feather="home" class="w-4 h-4"></i>
+        <span class="sidebar-label">Inicio</span>
+      </a>
+      <a href="/FrontEnd/Asistentes/Biomo/biomo.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+        <i data-feather="activity" class="w-4 h-4"></i>
+        <span class="sidebar-label">Mis Biomos</span>
+      </a>
+      <a href="/Asistentes/Convocatorias/convocatorias.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+        <i data-feather="file-text" class="w-4 h-4"></i>
+        <span class="sidebar-label">Nuevas Convocatorias</span>
+      </a>
+      <a href="/Asistentes/Convocatorias/anteproyectos.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+        <i data-feather="layers" class="w-4 h-4"></i>
+        <span class="sidebar-label">Explorador Convocatorias</span>
+      </a>
+       <a
+          href="/Asistentes\Convocatorias\NuevoAnteproyecto.html"
+          class="flex items-center gap-3 hover:text-green-400 py-2">
+          <i data-feather="folder-plus" class="w-4 h-4"></i>
+          <span class="sidebar-label"> Anteproyectos </span>
+        </a>
+
+      <a href="/FrontEnd/Asistentes/Convocatorias/chat.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+        <i data-feather="message-circle" class="w-4 h-4"></i>
+        <span class="sidebar-label">Chatbot</span>
+      </a>
+      <a href="/juego.html" class="flex items-center gap-3 hover:text-green-400 py-2">
+        <i data-feather="play-circle" class="w-4 h-4"></i>
+        <span class="sidebar-label">Videojuego</span>
+      </a>
+    </nav>
+    <!-- Botón cerrar sesión -->
+    <button id="logoutBtn" class="flex items-center gap-3 hover:text-red-400 py-2 px-6 mt-6">
+      <i data-feather="log-out" class="w-4 h-4"></i>
+      <span class="sidebar-label">Cerrar sesión</span>
+    </button>
+  </aside>
+
+  <!-- ▸ CONTENIDO -------------------------------------------------- -->
+  <main class="flex-1 overflow-y-auto p-6">
+    <button onclick="history.back()" class="bg-gray-700 text-white px-4 py-2 rounded mb-4">
+      Regresar a Convocatorias
+    </button>
+    <h1 class="text-2xl font-semibold mb-4">Detalle de Convocatoria</h1>
+    <div id="contenido" class="bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
+      <p>Cargando información...</p>
+    </div>
+  </main>
+</div>
+
+<script>
+  feather.replace();
+
+  // Sidebar toggle
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('toggleSide');
+  const arrow = toggleBtn.querySelector('svg');
+  toggleBtn.onclick = () => {
+    sidebar.classList.toggle('w-64');
+    sidebar.classList.toggle('w-16');
+    sidebar.classList.toggle('collapsed');
+    arrow.classList.toggle('rotate-180'); // Agregar rotación al icono
+  };
+
+  // Autenticación y avatar
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const token = localStorage.getItem('token');
+  if (!user.id_usuario || !token) {
+    document.body.innerHTML = '<h1 class="text-center mt-20 text-3xl">Mawi</h1><p class="text-center text-gray-400">Inicia sesión.</p>';
+    throw new Error('No auth');
+  }
+  document.getElementById('userName').textContent = user.nombre;
+  const foto = localStorage.getItem('foto_perfil') || '';
+  document.getElementById('avatar').src = foto.startsWith('/') ? foto : '/' + foto;
+  document.getElementById('profileBtn').onclick = () => location.href = '/Perfil/perfil.html';
+
+  // Obtener ID de URL
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+
+  // Cargar convocatoria
+  async function cargarDetalle() {
+    try {
+      const res = await fetch(`/api/anteproyectos/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('No se pudo cargar el anteproyecto');
+
+      const a = await res.json();
+      const html = `
+        <h2 class="text-xl font-semibold">${a.titulo}</h2>
+        <p class="text-gray-300">${a.descripcion || 'Sin descripción'}</p>
+        <div class="text-sm text-gray-400 space-y-1">
+          <p><strong>Estado:</strong> ${a.estado}</p>
+          <p><strong>Fecha de creación:</strong> ${new Date(a.fecha_creacion).toLocaleDateString()}</p>
+          <p><strong>Fecha límite:</strong> ${a.fecha_cierre ? new Date(a.fecha_cierre).toLocaleDateString() : '—'}</p>
+        </div>
+        <div class="mt-4">
+          <h3 class="text-lg mb-2 font-medium">Vista previa del PDF</h3>
+          <iframe src="/pdfs/${a.archivo_pdf}"></iframe>
+          <a href="/pdfs/${a.archivo_pdf}" download class="inline-block mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            Descargar PDF
+          </a>
+        </div>
+      `;
+      document.getElementById('contenido').innerHTML = html;
+      feather.replace();
+    } catch (err) {
+      document.getElementById('contenido').innerHTML = '<p class="text-red-500">Error al cargar la convocatoria.</p>';
+      console.error(err);
+    }
+  }
+
+  cargarDetalle();
+</script>
+</body>
+</html>
